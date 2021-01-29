@@ -33,7 +33,7 @@ void Matrix3f::set(int x, int y, float a)
 	array_[x][y] = a;
 }
 
-Matrix3f Matrix3f::times(Matrix3f b)
+Matrix3f Matrix3f::times(Matrix3f &b)
 {
 	Matrix3f r;
 	for (int i = 0; i < 3; i++)
