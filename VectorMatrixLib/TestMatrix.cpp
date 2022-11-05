@@ -14,6 +14,10 @@ int main()
 	std::cout << "Resulting in:" << std::endl;
 	Matrix3f p = m.times(n);
 	std::cout << p << std::endl;
+	float f = 0.5f;
+	std::cout << "Multiplying by float : " << f << std::endl;
+	p.times(f);
+	std::cout << p << std::endl;
 
 	std::cout << "Test Vector3f" << std::endl;
 	Vector3f v1(5);
