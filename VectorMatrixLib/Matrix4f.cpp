@@ -1,5 +1,6 @@
-#include "Matrix4f.h"
 #include <iostream>
+#include "Matrix4f.h"
+#include "Matrix3f.h"
 
 namespace vectormatrix
 {
@@ -37,6 +38,26 @@ namespace vectormatrix
 			array_[k][3] = 0;
 			if (k < 3) array_[3][k] = 0;
 		}
+	}
+
+	Matrix4f Matrix4f::operator+(const Matrix4f& m)
+	{
+		Matrix4f r;
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				r.array_[i][j] = this->array_[i][j] + m.array_[i][j];
+
+		return r;
+	}
+
+	Matrix4f Matrix4f::operator-(const Matrix4f& m)
+	{
+		Matrix4f r;
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				r.array_[i][j] = this->array_[i][j] - m.array_[i][j];
+
+		return r;
 	}
 
 

@@ -2,6 +2,8 @@
 #include "Matrix3f.h"
 #include "Vector3f.h"
 
+using namespace vectormatrix;
+
 int main()
 {
 	std::cout << "Test Matrix3f" << std::endl;
@@ -28,4 +30,10 @@ int main()
 	std::cout << "v2.timesEquals(2): " << v2 << std::endl;
 	Vector3f v3 = v1.times(11);
 	std::cout << "v3 = v1.times(11): " << v3 << std::endl;
+	std::cout << "v1 length: " << v1.length() << std::endl;
+	std::cout << "v2 length: " << v2.length() << std::endl;
+	std::cout << "v3 length: " << v3.length() << std::endl;
+	v2.normalize();
+	std::cout << "Normalized v2: " << v2 << std::endl;
+	std::cout << "Normalized v2 length: " << v2.length() << std::endl;
 }

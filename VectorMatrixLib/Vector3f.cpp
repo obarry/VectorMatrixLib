@@ -1,4 +1,5 @@
 #include "Vector3f.h"
+#include <math.h>
 
 namespace vectormatrix
 {
@@ -28,6 +29,36 @@ namespace vectormatrix
 		this->x = array[0];
 		this->y = array[1];
 		this->z = array[2];
+	}
+
+	Vector3f Vector3f::operator+(const Vector3f& v)
+	{
+		Vector3f r;
+		r.x = this->x + v.x;
+		r.y = this->y + v.y;
+		r.z = this->z + v.z;
+
+		return r;
+	}
+
+	Vector3f Vector3f::operator-(const Vector3f& v)
+	{
+		Vector3f r;
+		r.x = this->x - v.x;
+		r.y = this->y - v.y;
+		r.z = this->z - v.z;
+
+		return r;
+	}
+
+	Vector3f Vector3f::operator*(const Vector3f& v)
+	{
+		Vector3f r;
+		r.x = this->y * v.z - this->z * v.y;
+		r.y = this->z * v.x - this->x * v.z;
+		r.z = this->x * v.y - this->y * v.x;
+
+		return r;
 	}
 
 	float Vector3f::get(int i)
@@ -75,6 +106,26 @@ namespace vectormatrix
 		this->x *= a;
 		this->y *= a;
 		this->z *= a;
+	}
+
+	float Vector3f::dot(Vector3f& v)
+	{
+		return this->x * v.x + this->y * v.y + this->z * v.z;
+	}
+
+	float Vector3f::length()
+	{
+		return sqrtf(x * x + y * y + z * z);
+	}
+
+	Vector3f Vector3f::normalize()
+	{
+		float length = this->length();
+		this->x /= length;
+		this->y /= length;
+		this->z /= length;
+
+		return *this;
 	}
 
 	std::ostream& operator<<(std::ostream& strm, const Vector3f& v) {

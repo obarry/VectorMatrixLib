@@ -1,20 +1,26 @@
 #pragma once
+//#ifndef MATRIX4F_H
+//#define MATRIX4F_H
+
+#include <iostream>
 #include "Matrix3f.h"
 #include "Vector4f.h"
-#include <iostream>
-
-#ifndef MATRIX4F_H
-#define MATRIX4F_H
 
 namespace vectormatrix
 {
+	class Matrix3f;
+
 	class Matrix4f
 	{
 	public:
 		Matrix4f();
 		Matrix4f(float a);
 		Matrix4f(float array[4][4]);
-		Matrix4f(Matrix3f& b);
+		Matrix4f(vectormatrix::Matrix3f& b);
+
+		Matrix4f operator+(const Matrix4f& m);
+		Matrix4f operator-(const Matrix4f& m);
+
 		float get(int x, int y);
 		void set(int x, int y, float a);
 		Matrix4f times(Matrix4f& m);
@@ -26,5 +32,5 @@ namespace vectormatrix
 		friend std::ostream& operator<<(std::ostream&, const Matrix4f&);
 	};
 }
-#endif MATRIX4F_H
+//#endif MATRIX4F_H
 
