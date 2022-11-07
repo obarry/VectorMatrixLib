@@ -1,4 +1,3 @@
-//#pragma once
 #ifndef VECTOR3F_H
 #define VECTOR3F_H
 
@@ -6,6 +5,8 @@
 
 namespace vectormatrix
 {
+	class Matrix3f;
+
 	class Vector3f
 	{
 		friend class Matrix3f;
@@ -25,6 +26,7 @@ namespace vectormatrix
 
 		Vector3f times(float a);
 		void timesEquals(float a);
+		Vector3f times(Matrix3f& v);
 		float dot(Vector3f& v);
 
 		float length();

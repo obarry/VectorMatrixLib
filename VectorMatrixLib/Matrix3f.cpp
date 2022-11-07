@@ -36,22 +36,22 @@ namespace vectormatrix
 
 	Matrix3f Matrix3f::operator+(const Matrix3f& m)
 	{
-		Matrix3f r;
+		Matrix3f* r = new Matrix3f();
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				r.array_[i][j] = this->array_[i][j] + m.array_[i][j];
+				r->array_[i][j] = this->array_[i][j] + m.array_[i][j];
 
-		return r;
+		return *r;
 	}
 
 	Matrix3f Matrix3f::operator-(const Matrix3f& m)
 	{
-		Matrix3f r;
+		Matrix3f* r = new Matrix3f();
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				r.array_[i][j] = this->array_[i][j] - m.array_[i][j];
+				r->array_[i][j] = this->array_[i][j] - m.array_[i][j];
 
-		return r;
+		return *r;
 	}
 
 	float Matrix3f::get(int x, int y)
@@ -66,12 +66,12 @@ namespace vectormatrix
 
 	Matrix3f Matrix3f::times(Matrix3f& b)
 	{
-		Matrix3f r;
+		Matrix3f* r = new Matrix3f();
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				r.array_[i][j] = array_[i][0] * b.array_[0][j] + array_[i][1] * b.array_[1][j] + array_[i][2] * b.array_[2][j];
+				r->array_[i][j] = this->array_[i][0] * b.array_[0][j] + this->array_[i][1] * b.array_[1][j] + this->array_[i][2] * b.array_[2][j];
 
-		return r;
+		return *r;
 	}
 
 	void Matrix3f::times(float a)
@@ -83,10 +83,10 @@ namespace vectormatrix
 
 	Vector3f Matrix3f::times(Vector3f& v)
 	{
-		Vector3f r;
+		Vector3f* r = new Vector3f();
 		for (int i = 0; i < 3; i++)
-			r.set(i, array_[i][0] * v.x + array_[i][1] * v.y + array_[i][2] * v.z);
-		return r;
+			r->set(i, array_[i][0] * v.x + array_[i][1] * v.y + array_[i][2] * v.z);
+		return *r;
 	}
 
 	std::ostream& operator<<(std::ostream& strm, const Matrix3f& m) {

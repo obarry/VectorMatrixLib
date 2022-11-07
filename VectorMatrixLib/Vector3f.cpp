@@ -1,5 +1,7 @@
-#include "Vector3f.h"
+#include <iostream>
 #include <math.h>
+#include "Vector3f.h"
+#include "Matrix3f.h"
 
 namespace vectormatrix
 {
@@ -33,32 +35,32 @@ namespace vectormatrix
 
 	Vector3f Vector3f::operator+(const Vector3f& v)
 	{
-		Vector3f r;
-		r.x = this->x + v.x;
-		r.y = this->y + v.y;
-		r.z = this->z + v.z;
+		Vector3f* r = new Vector3f();
+		r->x = this->x + v.x;
+		r->y = this->y + v.y;
+		r->z = this->z + v.z;
 
-		return r;
+		return *r;
 	}
 
 	Vector3f Vector3f::operator-(const Vector3f& v)
 	{
-		Vector3f r;
-		r.x = this->x - v.x;
-		r.y = this->y - v.y;
-		r.z = this->z - v.z;
+		Vector3f* r = new Vector3f();
+		r->x = this->x - v.x;
+		r->y = this->y - v.y;
+		r->z = this->z - v.z;
 
-		return r;
+		return *r;
 	}
 
 	Vector3f Vector3f::operator*(const Vector3f& v)
 	{
-		Vector3f r;
-		r.x = this->y * v.z - this->z * v.y;
-		r.y = this->z * v.x - this->x * v.z;
-		r.z = this->x * v.y - this->y * v.x;
+		Vector3f* r = new Vector3f();
+		r->x = this->y * v.z - this->z * v.y;
+		r->y = this->z * v.x - this->x * v.z;
+		r->z = this->x * v.y - this->y * v.x;
 
-		return r;
+		return *r;
 	}
 
 	float Vector3f::get(int i)
@@ -94,7 +96,7 @@ namespace vectormatrix
 
 	Vector3f Vector3f::times(float a)
 	{
-		Vector3f* vec = new Vector3f;
+		Vector3f* vec = new Vector3f();
 		vec->x = this->x * a;
 		vec->y = this->y * a;
 		vec->z = this->z * a;
@@ -106,6 +108,16 @@ namespace vectormatrix
 		this->x *= a;
 		this->y *= a;
 		this->z *= a;
+	}
+
+	Vector3f Vector3f::times(Matrix3f& m)
+	{
+		Vector3f* r = new Vector3f();
+		r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2);
+		r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2);
+		r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2);
+
+		return *r;
 	}
 
 	float Vector3f::dot(Vector3f& v)

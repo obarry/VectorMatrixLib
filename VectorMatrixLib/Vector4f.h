@@ -1,13 +1,16 @@
-//#pragma once
-
 #ifndef VECTOR4F_H
 #define VECTOR4F_H
+
 #include <iostream>
 
 namespace vectormatrix
 {
+	class Matrix4f;
+
 	class Vector4f
 	{
+		friend class Matrix4f;
+
 	public:
 		Vector4f();
 		Vector4f(float a);
@@ -23,6 +26,7 @@ namespace vectormatrix
 		void set(int i, float v);
 		Vector4f times(float a);
 		void timesEquals(float a);
+		Vector4f times(Matrix4f& v);
 		float dot(Vector4f& v);
 
 		float length();

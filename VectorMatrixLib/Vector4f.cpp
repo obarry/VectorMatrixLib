@@ -1,5 +1,6 @@
-#include "Vector4f.h"
 #include <math.h>
+#include "Vector4f.h"
+#include "Matrix4f.h"
 
 namespace vectormatrix
 {
@@ -121,6 +122,18 @@ namespace vectormatrix
 		this->z *= a;
 		this->w *= a;
 	}
+
+	Vector4f Vector4f::times(Matrix4f& m)
+	{
+		Vector4f* r = new Vector4f();
+		r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2) + this->w * m.get(0, 3);
+		r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2) + this->w * m.get(1, 3);
+		r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2) + this->w * m.get(2, 3);
+		r->w = this->x * m.get(3, 0) + this->y * m.get(3, 1) + this->z * m.get(3, 2) + this->w * m.get(3, 3);
+
+		return *r;
+	}
+
 
 	float Vector4f::dot(Vector4f& v)
 	{

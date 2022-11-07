@@ -1,6 +1,5 @@
-#pragma once
-//#ifndef MATRIX4F_H
-//#define MATRIX4F_H
+#ifndef MATRIX4F_H
+#define MATRIX4F_H
 
 #include <iostream>
 #include "Matrix3f.h"
@@ -32,5 +31,5 @@ namespace vectormatrix
 		friend std::ostream& operator<<(std::ostream&, const Matrix4f&);
 	};
 }
-//#endif MATRIX4F_H
+#endif MATRIX4F_H
 
