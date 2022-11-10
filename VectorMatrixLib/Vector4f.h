@@ -20,14 +20,15 @@ namespace vectormatrix
 		Vector4f operator+(const Vector4f& v);
 		Vector4f operator-(const Vector4f& v);
 		Vector4f operator*(const Vector4f& v);
-
+		Vector4f operator*(Matrix4f& m);
+		void operator*=(Matrix4f& m);
+		Vector4f operator*(float a);
+		void operator*=(float a);
+		float operator*(Vector4f& v);
 
 		float get(int i);
 		void set(int i, float v);
-		Vector4f times(float a);
-		void timesEquals(float a);
-		Vector4f times(Matrix4f& v);
-		float dot(Vector4f& v);
+		//float dot(Vector4f& v);
 
 		float length();
 		Vector4f normalize();

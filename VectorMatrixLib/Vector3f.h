@@ -20,14 +20,14 @@ namespace vectormatrix
 		Vector3f operator+(const Vector3f& v);
 		Vector3f operator-(const Vector3f& v);
 		Vector3f operator*(const Vector3f& v);
+		Vector3f operator*(Matrix3f& m);
+		void operator*=(Matrix3f& m);
+		Vector3f operator*(float a);
+		void operator*=(float a);
+		float operator*(Vector3f& v);
 
 		float get(int i);
 		void set(int i, float v);
-
-		Vector3f times(float a);
-		void timesEquals(float a);
-		Vector3f times(Matrix3f& v);
-		float dot(Vector3f& v);
 
 		float length();
 		Vector3f normalize();

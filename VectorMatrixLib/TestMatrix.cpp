@@ -26,9 +26,10 @@ int main()
 	Vector3f v2(2, 3, 4);
 	std::cout << "Vector v1: " << v1 << std::endl;
 	std::cout << "Vector v2: " << v2 << std::endl;
-	v2.timesEquals(2);
+	std::cout << "dot product: v1.v2 = " << v1 * v2 << std::endl;
+	v2*=2;
 	std::cout << "v2.timesEquals(2): " << v2 << std::endl;
-	Vector3f v3 = v1.times(11);
+	Vector3f v3 = v1*11;
 	std::cout << "v3 = v1.times(11): " << v3 << std::endl;
 	std::cout << "v1 length: " << v1.length() << std::endl;
 	std::cout << "v2 length: " << v2.length() << std::endl;
