@@ -6,6 +6,7 @@
 namespace vectormatrix
 {
 	class Matrix4f;
+	class Vector3f;
 
 	class Vector4f
 	{
@@ -16,6 +17,7 @@ namespace vectormatrix
 		Vector4f(float a);
 		Vector4f(float x, float y, float z, float w);
 		Vector4f(float array[4]);
+		Vector4f(Vector3f v);
 
 		Vector4f operator+(const Vector4f& v);
 		Vector4f operator-(const Vector4f& v);
@@ -28,7 +30,6 @@ namespace vectormatrix
 
 		float get(int i);
 		void set(int i, float v);
-		//float dot(Vector4f& v);
 
 		float length();
 		Vector4f normalize();

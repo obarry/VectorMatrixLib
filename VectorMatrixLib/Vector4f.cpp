@@ -1,6 +1,7 @@
 #include <math.h>
 #include "Vector4f.h"
 #include "Matrix4f.h"
+#include "Vector3f.h"
 
 namespace vectormatrix
 {
@@ -34,6 +35,14 @@ namespace vectormatrix
 		this->y = array[1];
 		this->z = array[2];
 		this->w = array[3];
+	}
+
+	Vector4f::Vector4f(Vector3f v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+		this->w = 0;
 	}
 
 	Vector4f Vector4f::operator+(const Vector4f& v)
@@ -152,41 +161,6 @@ namespace vectormatrix
 			break;
 		}
 	}
-
-	//Vector4f Vector4f::times(float a)
-	//{
-	//	Vector4f* vec = new Vector4f;
-	//	vec->x = this->x * a;
-	//	vec->y = this->y * a;
-	//	vec->z = this->z * a;
-	//	vec->w = this->w * a;
-	//	return *vec;
-	//}
-
-	//void Vector4f::timesEquals(float a)
-	//{
-	//	this->x *= a;
-	//	this->y *= a;
-	//	this->z *= a;
-	//	this->w *= a;
-	//}
-
-	//Vector4f Vector4f::times(Matrix4f& m)
-	//{
-	//	Vector4f* r = new Vector4f();
-	//	r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2) + this->w * m.get(0, 3);
-	//	r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2) + this->w * m.get(1, 3);
-	//	r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2) + this->w * m.get(2, 3);
-	//	r->w = this->x * m.get(3, 0) + this->y * m.get(3, 1) + this->z * m.get(3, 2) + this->w * m.get(3, 3);
-
-	//	return *r;
-	//}
-
-
-	//float Vector4f::dot(Vector4f& v)
-	//{
-	//	return this->x * v.x + this->y * v.y + this->z * v.z + this->w * v.w;
-	//}
 
 	float Vector4f::length()
 	{

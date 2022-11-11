@@ -37,4 +37,6 @@ int main()
 	v2.normalize();
 	std::cout << "Normalized v2: " << v2 << std::endl;
 	std::cout << "Normalized v2 length: " << v2.length() << std::endl;
+	Vector4f v1_4 = v1.V4();
+	std::cout << "v1.V4(): " << v1_4 << std::endl;
 }

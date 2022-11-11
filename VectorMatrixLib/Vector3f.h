@@ -2,6 +2,8 @@
 #define VECTOR3F_H
 
 #include <iostream>
+#include "Matrix3f.h"
+#include "Vector4f.h"
 
 namespace vectormatrix
 {
@@ -10,6 +12,7 @@ namespace vectormatrix
 	class Vector3f
 	{
 		friend class Matrix3f;
+		friend class Vector4f;
 
 	public:
 		Vector3f();
@@ -27,10 +30,17 @@ namespace vectormatrix
 		float operator*(Vector3f& v);
 
 		float get(int i);
+		float getX();
+		float getY();
+		float getZ();
 		void set(int i, float v);
+		void setX(float v);
+		void setY(float v);
+		void setZ(float v);
 
 		float length();
 		Vector3f normalize();
+		Vector4f V4();
 
 	private:
 		float x;

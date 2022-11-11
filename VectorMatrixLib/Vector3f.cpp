@@ -121,6 +121,20 @@ namespace vectormatrix
 		}
 	}
 
+	float Vector3f::getX()
+	{
+		return this->x;
+	}
+	float Vector3f::getY()
+	{
+		return this->y;
+	}
+	float Vector3f::getZ()
+	{
+		return this->z;
+	}
+
+
 	void Vector3f::set(int i, float a)
 	{
 		switch (i) {
@@ -138,36 +152,16 @@ namespace vectormatrix
 		}
 	}
 
-	//Vector3f Vector3f::times(float a)
-	//{
-	//	Vector3f* vec = new Vector3f();
-	//	vec->x = this->x * a;
-	//	vec->y = this->y * a;
-	//	vec->z = this->z * a;
-	//	return *vec;
-	//}
-
-	//void Vector3f::timesEquals(float a)
-	//{
-	//	this->x *= a;
-	//	this->y *= a;
-	//	this->z *= a;
-	//}
-
-	//Vector3f Vector3f::times(Matrix3f& m)
-	//{
-	//	Vector3f* r = new Vector3f();
-	//	r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2);
-	//	r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2);
-	//	r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2);
-
-	//	return *r;
-	//}
-
-	//float Vector3f::dot(Vector3f& v)
-	//{
-	//	return this->x * v.x + this->y * v.y + this->z * v.z;
-	//}
+	void Vector3f::setX(float v) {
+		this->x = v;
+	}
+	void Vector3f::setY(float v) {
+		this->y = v;
+	}
+	void Vector3f::setZ(float v)
+	{
+		this->z = v;
+	}
 
 	float Vector3f::length()
 	{
@@ -182,6 +176,12 @@ namespace vectormatrix
 		this->z /= length;
 
 		return *this;
+	}
+
+	Vector4f Vector3f::V4()
+	{
+		Vector4f* r = new Vector4f(*this);
+		return *r;
 	}
 
 	std::ostream& operator<<(std::ostream& strm, const Vector3f& v) {
