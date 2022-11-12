@@ -21,22 +21,34 @@ namespace vectormatrix
 	class Matrix4f
 	{
 	public:
+		// Constants
+		static const int SIZE4 = 4;
+
+		// Constructors
 		Matrix4f();
 		Matrix4f(float a);
-		Matrix4f(float array[4][4]);
+		Matrix4f(float array[SIZE4][SIZE4]);
+		Matrix4f(const Matrix4f& m);
 		Matrix4f(vectormatrix::Matrix3f& b);
 
+		// Operators
+		void operator=(const Matrix4f& m);
 		Matrix4f operator+(const Matrix4f& m);
+		void operator+=(const Matrix4f& m);
 		Matrix4f operator-(const Matrix4f& m);
+		void operator-=(const Matrix4f& m);
+		Matrix4f operator*(const Matrix4f& m);
+		void operator*=(const Matrix4f& m);
+		Matrix4f operator*(float a);
+		void operator*=(float a);
+		Vector4f operator*(Vector4f& v);
 
+		// Getters and Setters
 		float get(int x, int y) const;
 		void set(int x, int y, float a);
-		Matrix4f times(Matrix4f& m);
-		void times(float f);
-		Vector4f times(Vector4f& v);
 
 	private:
-		float array_[4][4];
+		float array_[SIZE4][SIZE4];
 		friend std::ostream& operator<<(std::ostream&, const Matrix4f&);
 	};
 }

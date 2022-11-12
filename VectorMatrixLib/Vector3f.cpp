@@ -42,6 +42,13 @@ namespace vectormatrix
 		this->z = array[2];
 	}
 
+	void Vector3f::operator=(const Vector3f& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
 	Vector3f Vector3f::operator+(const Vector3f& v)
 	{
 		Vector3f* r = new Vector3f();

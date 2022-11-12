@@ -23,11 +23,11 @@ int main()
 	Matrix3f n(4);
 	std::cout << n << std::endl;
 	std::cout << "Resulting in:" << std::endl;
-	Matrix3f p = m.times(n);
+	Matrix3f p = m * n;
 	std::cout << p << std::endl;
 	float f = 0.5f;
 	std::cout << "Multiplying by float : " << f << std::endl;
-	p.times(f);
+	p * f;
 	std::cout << p << std::endl;
 
 	std::cout << "Test Vector3f" << std::endl;

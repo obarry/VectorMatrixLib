@@ -54,6 +54,14 @@ namespace vectormatrix
 		this->w = 0;
 	}
 
+	void Vector4f::operator=(const Vector4f& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+		this->w = v.w;
+	}
+
 	Vector4f Vector4f::operator+(const Vector4f& v)
 	{
 		Vector4f r;

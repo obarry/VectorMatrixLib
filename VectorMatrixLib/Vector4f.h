@@ -31,6 +31,7 @@ namespace vectormatrix
 		Vector4f(Vector3f v);
 
 		// Operators
+		void operator=(const Vector4f& v);
 		Vector4f operator+(const Vector4f& v);
 		void operator+=(const Vector4f& v);
 		Vector4f operator-(const Vector4f& v);

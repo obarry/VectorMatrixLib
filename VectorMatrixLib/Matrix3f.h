@@ -21,22 +21,34 @@ namespace vectormatrix
 	class Matrix3f
 	{
 	public:
+		// Constants
+		static const int SIZE3 = 3;
+
+		// Constructors
 		Matrix3f();
 		Matrix3f(float a);
-		Matrix3f(float array[3][3]);
+		Matrix3f(float array[SIZE3][SIZE3]);
+		Matrix3f(const Matrix3f& m);
 		Matrix3f(vectormatrix::Matrix4f& b);
 
+		// Operators
+		void operator=(const Matrix3f& m);
 		Matrix3f operator+(const Matrix3f& m);
+		void operator+=(const Matrix3f& m);
 		Matrix3f operator-(const Matrix3f& m);
+		void operator-=(const Matrix3f& m);
+		Matrix3f operator*(const Matrix3f& m);
+		void operator*=(const Matrix3f& m);
+		Matrix4f operator*(float a);
+		void operator*=(float a);
+		Vector3f operator*(Vector3f& v);
 
+		// Getters and Setters
 		float get(int x, int y) const;
 		void set(int x, int y, float a);
-		Matrix3f times(vectormatrix::Matrix3f& m);
-		void times(float f);
-		Vector3f times(vectormatrix::Vector3f& v);
 
 	private:
-		float array_[3][3];
+		float array_[SIZE3][SIZE3];
 		friend std::ostream& operator<<(std::ostream&, const vectormatrix::Matrix3f&);
 	};
 }
