@@ -1,3 +1,12 @@
+//
+// MIT License
+// Copyright(c) 2021 - 2022 Olivier BARRY
+// 
+// This file is part of the C++ Aventura Project
+// 
+// VectorMatrix Math Library
+//
+
 #ifndef MATRIX4F_H
 #define MATRIX4F_H
 
@@ -20,7 +29,7 @@ namespace vectormatrix
 		Matrix4f operator+(const Matrix4f& m);
 		Matrix4f operator-(const Matrix4f& m);
 
-		float get(int x, int y);
+		float get(int x, int y) const;
 		void set(int x, int y, float a);
 		Matrix4f times(Matrix4f& m);
 		void times(float f);

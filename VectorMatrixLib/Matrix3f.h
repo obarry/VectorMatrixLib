@@ -1,3 +1,12 @@
+//
+// MIT License
+// Copyright(c) 2021 - 2022 Olivier BARRY
+// 
+// This file is part of the C++ Aventura Project
+// 
+// VectorMatrix Math Library
+//
+
 #ifndef MATRIX3F_H
 #define MATRIX3F_H
 
@@ -20,7 +29,7 @@ namespace vectormatrix
 		Matrix3f operator+(const Matrix3f& m);
 		Matrix3f operator-(const Matrix3f& m);
 
-		float get(int x, int y);
+		float get(int x, int y) const;
 		void set(int x, int y, float a);
 		Matrix3f times(vectormatrix::Matrix3f& m);
 		void times(float f);

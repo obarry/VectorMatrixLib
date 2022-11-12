@@ -1,3 +1,12 @@
+//
+// MIT License
+// Copyright(c) 2021 - 2022 Olivier BARRY
+// 
+// This file is part of the C++ Aventura Project
+// 
+// VectorMatrix Math Library
+//
+
 #include <iostream>
 #include "Matrix4f.h"
 #include "Matrix3f.h"
@@ -61,7 +70,7 @@ namespace vectormatrix
 	}
 
 
-	float Matrix4f::get(int x, int y)
+	float Matrix4f::get(int x, int y) const
 	{
 		return array_[x][y];
 	}

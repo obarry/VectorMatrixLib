@@ -1,3 +1,12 @@
+//
+// MIT License
+// Copyright(c) 2021 - 2022 Olivier BARRY
+// 
+// This file is part of the C++ Aventura Project
+// 
+// VectorMatrix Math Library
+//
+
 #include <iostream>
 #include "Matrix3f.h"
 #include "Vector3f.h"
@@ -26,7 +35,8 @@ int main()
 	Vector3f v2(2, 3, 4);
 	std::cout << "Vector v1: " << v1 << std::endl;
 	std::cout << "Vector v2: " << v2 << std::endl;
-	std::cout << "dot product: v1.v2 = " << v1 * v2 << std::endl;
+	std::cout << "dot product: v1.v2 = " << v1.dot(v2) << std::endl;
+	std::cout << "cross product: v1 x v2 = " << v1*v2 << std::endl;
 	v2*=2;
 	std::cout << "v2.timesEquals(2): " << v2 << std::endl;
 	Vector3f v3 = v1*11;
