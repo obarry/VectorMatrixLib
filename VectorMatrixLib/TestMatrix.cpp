@@ -1,6 +1,6 @@
 //
 // MIT License
-// Copyright(c) 2021 - 2023 Olivier BARRY
+// Copyright(c) 2021 - 2026 Olivier BARRY
 // 
 // This file is part of the C++ Aventura Project
 // 
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Matrix3f.h"
 #include "Vector3f.h"
+#include "Vector4f.h"
 
 using namespace vectormatrix;
 
@@ -27,7 +28,7 @@ int main()
 	std::cout << p << std::endl;
 	float f = 0.5f;
 	std::cout << "Multiplying by float : " << f << std::endl;
-	p * f;
+	p *= f;
 	std::cout << p << std::endl;
 
 	std::cout << "Test Vector3f" << std::endl;

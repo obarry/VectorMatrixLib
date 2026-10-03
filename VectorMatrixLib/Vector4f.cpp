@@ -1,276 +1,221 @@
 //
 // MIT License
-// Copyright(c) 2021 - 2023 Olivier BARRY
+// Copyright(c) 2021 - 2026 Olivier BARRY
 // 
 // This file is part of the C++ Aventura Project
 // 
 // VectorMatrix Math Library
 //
 
-#include <math.h>
+#include <iostream>
+#include <cmath>
 #include "Vector4f.h"
-#include "Matrix4f.h"
 #include "Vector3f.h"
+#include "Matrix4f.h"
 
 namespace vectormatrix
 {
-	Vector4f::Vector4f()
+	Vector4f::Vector4f() : x(0), y(0), z(0), w(0)
 	{
-		x = 0;
-		y = 0;
-		z = 0;
-		w = 0;
 	}
 
-	Vector4f::Vector4f(float a)
+	Vector4f::Vector4f(float a) : x(a), y(a), z(a), w(a)
 	{
-		x = a;
-		y = a;
-		z = a;
-		w = a;
 	}
 
-	Vector4f::Vector4f(float x, float y, float z, float w)
+	Vector4f::Vector4f(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		this->w = w;
 	}
 
-	Vector4f::Vector4f(float array[4])
+	Vector4f::Vector4f(const float array[4]) : x(array[0]), y(array[1]), z(array[2]), w(array[3])
 	{
-		this->x = array[0];
-		this->y = array[1];
-		this->z = array[2];
-		this->w = array[3];
 	}
 
-	Vector4f::Vector4f(Vector3f v)
+	Vector4f::Vector4f(const Vector3f& v) : x(v.getX()), y(v.getY()), z(v.getZ()), w(0)
 	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-		this->w = 0;
 	}
 
-	void Vector4f::operator=(const Vector4f& v)
+	Vector4f Vector4f::operator+(const Vector4f& v) const
 	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-		this->w = v.w;
+		return Vector4f(x + v.x, y + v.y, z + v.z, w + v.w);
 	}
 
-	Vector4f Vector4f::operator+(const Vector4f& v)
+	Vector4f& Vector4f::operator+=(const Vector4f& v)
 	{
-		Vector4f r;
-		r.x = this->x + v.x;
-		r.y = this->y + v.y;
-		r.z = this->z + v.z;
-		r.w = this->w + v.w;
-
-		return r;
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		w += v.w;
+		return *this;
 	}
 
-	void Vector4f::operator+=(const Vector4f& v)
+	Vector4f Vector4f::operator-(const Vector4f& v) const
 	{
-		this->x += v.x;
-		this->y += v.y;
-		this->z += v.z;
-		this->w += v.w;
+		return Vector4f(x - v.x, y - v.y, z - v.z, w - v.w);
 	}
 
-	Vector4f Vector4f::operator-(const Vector4f& v)
+	Vector4f& Vector4f::operator-=(const Vector4f& v)
 	{
-		Vector4f r;
-		r.x = this->x - v.x;
-		r.y = this->y - v.y;
-		r.z = this->z - v.z;
-		r.w = this->w - v.w;
-
-		return r;
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		w -= v.w;
+		return *this;
 	}
 
-	void Vector4f::operator-=(const Vector4f& v)
+	Vector4f Vector4f::operator*(const Vector4f& v) const
 	{
-		this->x -= v.x;
-		this->y -= v.y;
-		this->z -= v.z;
-		this->w -= v.w;
+		// w = 0: assuming Vector, not Point
+		return Vector4f(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x, 0);
 	}
 
-	Vector4f Vector4f::operator*(const Vector4f& v)
+	Vector4f Vector4f::operator*(const Matrix4f& m) const
 	{
-		Vector4f r;
-		r.x = this->y * v.z - this->z * v.y;
-		r.y = this->z * v.x - this->x * v.z;
-		r.z = this->x * v.y - this->y * v.x;
-		r.w = 0; // Assuming Vector, not Point
-
-		return r;
+		return Vector4f(
+			x * m.get(0, 0) + y * m.get(0, 1) + z * m.get(0, 2) + w * m.get(0, 3),
+			x * m.get(1, 0) + y * m.get(1, 1) + z * m.get(1, 2) + w * m.get(1, 3),
+			x * m.get(2, 0) + y * m.get(2, 1) + z * m.get(2, 2) + w * m.get(2, 3),
+			x * m.get(3, 0) + y * m.get(3, 1) + z * m.get(3, 2) + w * m.get(3, 3));
 	}
 
-	Vector4f Vector4f::operator*(const Matrix4f& m)
+	Vector4f& Vector4f::operator*=(const Matrix4f& m)
 	{
-		Vector4f* r = new Vector4f();
-		r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2) + this->w * m.get(0, 3);
-		r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2) + this->w * m.get(1, 3);
-		r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2) + this->w * m.get(2, 3);
-		r->w = this->x * m.get(3, 0) + this->y * m.get(3, 1) + this->z * m.get(3, 2) + this->w * m.get(3, 3);
-
-		return *r;
+		*this = *this * m;
+		return *this;
 	}
 
-	void Vector4f::operator*=(const Matrix4f& m)
+	Vector4f Vector4f::operator*(float a) const
 	{
-		Vector4f* r = new Vector4f();
-		r->x = this->x * m.get(0, 0) + this->y * m.get(0, 1) + this->z * m.get(0, 2) + this->w * m.get(0, 3);
-		r->y = this->x * m.get(1, 0) + this->y * m.get(1, 1) + this->z * m.get(1, 2) + this->w * m.get(1, 3);
-		r->z = this->x * m.get(2, 0) + this->y * m.get(2, 1) + this->z * m.get(2, 2) + this->w * m.get(2, 3);
-		r->w = this->x * m.get(3, 0) + this->y * m.get(3, 1) + this->z * m.get(3, 2) + this->w * m.get(3, 3);
-
-		this->x = r->x;
-		this->y = r->y;
-		this->z = r->z;
-		this->w = r->w;
+		return Vector4f(x * a, y * a, z * a, w * a);
 	}
 
-	Vector4f Vector4f::operator*(float a)
+	Vector4f& Vector4f::operator*=(float a)
 	{
-		Vector4f* vec = new Vector4f;
-		vec->x = this->x * a;
-		vec->y = this->y * a;
-		vec->z = this->z * a;
-		vec->w = this->w * a;
-		return *vec;
+		x *= a;
+		y *= a;
+		z *= a;
+		w *= a;
+		return *this;
 	}
 
-	void Vector4f::operator*=(float a)
+	Vector4f Vector4f::operator/(float a) const
 	{
-		this->x *= a;
-		this->y *= a;
-		this->z *= a;
-		this->w *= a;
+		return Vector4f(x / a, y / a, z / a, w / a);
 	}
 
-	Vector4f Vector4f::operator/(float a)
+	Vector4f& Vector4f::operator/=(float a)
 	{
-		Vector4f* vec = new Vector4f;
-		vec->x = this->x / a;
-		vec->y = this->y / a;
-		vec->z = this->z / a;
-		vec->w = this->w / a;
-		return *vec;
+		x /= a;
+		y /= a;
+		z /= a;
+		w /= a;
+		return *this;
 	}
 
-	void Vector4f::operator/=(float a)
+	float Vector4f::dot(const Vector4f& v) const
 	{
-		this->x /= a;
-		this->y /= a;
-		this->z /= a;
-		this->w /= a;
+		return x * v.x + y * v.y + z * v.z + w * v.w;
 	}
 
-	float Vector4f::dot(const Vector4f& v)
-	{
-		return this->x * v.x + this->y * v.y + this->z * v.z + this->w * v.w;
-	}
-
-
-	float Vector4f::get(int i)
+	float Vector4f::get(int i) const
 	{
 		switch (i) {
 		case 0:
-			return this->x;
+			return x;
 		case 1:
-			return this->y;
+			return y;
 		case 2:
-			return this->z;
+			return z;
 		case 3:
-			return this->w;
+			return w;
 		default:
 			return NAN;
 		}
 	}
 
-	float Vector4f::getX()
+	float Vector4f::getX() const
 	{
-		return this->x;
+		return x;
 	}
-	float Vector4f::getY()
+
+	float Vector4f::getY() const
 	{
-		return this->y;
+		return y;
 	}
-	float Vector4f::getZ()
+
+	float Vector4f::getZ() const
 	{
-		return this->z;
+		return z;
 	}
-	float Vector4f::getW()
+
+	float Vector4f::getW() const
 	{
-		return this->w;
+		return w;
 	}
 
 	void Vector4f::set(int i, float a)
 	{
 		switch (i) {
 		case 0:
-			this->x = a;
+			x = a;
 			break;
 		case 1:
-			this->y = a;
+			y = a;
 			break;
 		case 2:
-			this->z = a;
+			z = a;
 			break;
 		case 3:
-			this->w = a;
+			w = a;
+			break;
 		default:
 			break;
 		}
 	}
 
-	void Vector4f::setX(float v) {
-		this->x = v;
+	void Vector4f::setX(float v)
+	{
+		x = v;
 	}
-	void Vector4f::setY(float v) {
-		this->y = v;
+
+	void Vector4f::setY(float v)
+	{
+		y = v;
 	}
+
 	void Vector4f::setZ(float v)
 	{
-		this->z = v;
+		z = v;
 	}
+
 	void Vector4f::setW(float v)
 	{
-		this->z = w;
-	}
-	float Vector4f::length()
-	{
-		return sqrtf(x * x + y * y + z * z + w * w);
+		w = v;
 	}
 
-	Vector4f Vector4f::normalize()
+	float Vector4f::length() const
+	{
+		return std::sqrt(x * x + y * y + z * z + w * w);
+	}
+
+	Vector4f& Vector4f::normalize()
 	{
 		float length = this->length();
-		this->x /= length;
-		this->y /= length;
-		this->z /= length;
-		this->w /= length;
-
+		x /= length;
+		y /= length;
+		z /= length;
+		w /= length;
 		return *this;
 	}
 
 	// static member function (see declaration)
-	Vector4f Vector4f::interpolate(Vector4f& v1, Vector4f& v2, float t)
+	Vector4f Vector4f::interpolate(const Vector4f& v1, const Vector4f& v2, float t)
 	{
-		Vector4f* r = new Vector4f();
-
-		*r = v1 * (1 - t) + v2 * t;
-
-		return *r;
+		return v1 * (1 - t) + v2 * t;
 	}
 
-	std::ostream& operator<<(std::ostream& strm, const Vector4f& v) {
+	std::ostream& operator<<(std::ostream& strm, const Vector4f& v)
+	{
 		strm << "Vector4f(" << std::endl;
 		strm << v.x << " ";
 		strm << v.y << " ";

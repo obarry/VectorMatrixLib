@@ -1,6 +1,6 @@
 //
 // MIT License
-// Copyright(c) 2021 - 2023 Olivier BARRY
+// Copyright(c) 2021 - 2026 Olivier BARRY
 // 
 // This file is part of the C++ Aventura Project
 // 
@@ -19,39 +19,39 @@ namespace vectormatrix
 
 	class Vector4f
 	{
-		friend class Matrix4f; // To allow private members of Vector4f to be accessed in Matrix4f
-
 	public:
 
 		// Constructors
 		Vector4f();
-		Vector4f(float a);
+		explicit Vector4f(float a);
 		Vector4f(float x, float y, float z, float w);
-		Vector4f(float array[4]);
-		Vector4f(Vector3f v);
+		explicit Vector4f(const float array[4]);
+		// w is set to 0 (vector, not point)
+		explicit Vector4f(const Vector3f& v);
 
 		// Operators
-		void operator=(const Vector4f& v);
-		Vector4f operator+(const Vector4f& v);
-		void operator+=(const Vector4f& v);
-		Vector4f operator-(const Vector4f& v);
-		void operator-=(const Vector4f& v);
-		Vector4f operator*(const Vector4f& v);
-		Vector4f operator*(const Matrix4f& m);
-		void operator*=(const Matrix4f& m);
-		Vector4f operator*(float a);
-		void operator*=(float a);
-		Vector4f operator/(float a);
-		void operator/=(float a);
+		Vector4f operator+(const Vector4f& v) const;
+		Vector4f& operator+=(const Vector4f& v);
+		Vector4f operator-(const Vector4f& v) const;
+		Vector4f& operator-=(const Vector4f& v);
+		// Cross product (assuming vectors, w forced to 0)
+		Vector4f operator*(const Vector4f& v) const;
+		// W = A.V (same semantic as Java Vector4.times(Matrix4))
+		Vector4f operator*(const Matrix4f& m) const;
+		Vector4f& operator*=(const Matrix4f& m);
+		Vector4f operator*(float a) const;
+		Vector4f& operator*=(float a);
+		Vector4f operator/(float a) const;
+		Vector4f& operator/=(float a);
 		// dot operator cannot use * operator as same signature than operator*(const Vector4f& v) except return type but that is not sufficient
-		float dot(const Vector4f& v);
+		float dot(const Vector4f& v) const;
 
 		// getter and setter
-		float get(int i);
-		float getX();
-		float getY();
-		float getZ();
-		float getW();
+		float get(int i) const;
+		float getX() const;
+		float getY() const;
+		float getZ() const;
+		float getW() const;
 
 		void set(int i, float v);
 		void setX(float v);
@@ -60,11 +60,12 @@ namespace vectormatrix
 		void setW(float v);
 
 		// Other methods
-		float length();
-		Vector4f normalize();
+		float length() const;
+		// Normalize this vector (modified) and return it
+		Vector4f& normalize();
 
 		// Static methods
-		static Vector4f interpolate(Vector4f& v1, Vector4f& v2, float t);
+		static Vector4f interpolate(const Vector4f& v1, const Vector4f& v2, float t);
 
 	private:
 		float x;
@@ -72,8 +73,7 @@ namespace vectormatrix
 		float z;
 		float w;
 		friend std::ostream& operator<<(std::ostream&, const Vector4f&);
-
 	};
 }
 
-#endif VECTOR4F_H
+#endif // VECTOR4F_H

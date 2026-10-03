@@ -1,6 +1,6 @@
 //
 // MIT License
-// Copyright(c) 2021 - 2023 Olivier BARRY
+// Copyright(c) 2021 - 2026 Olivier BARRY
 // 
 // This file is part of the C++ Aventura Project
 // 
@@ -11,7 +11,6 @@
 #define MATRIX4F_H
 
 #include <iostream>
-#include "Matrix3f.h"
 #include "Vector4f.h"
 
 namespace vectormatrix
@@ -26,22 +25,21 @@ namespace vectormatrix
 
 		// Constructors
 		Matrix4f();
-		Matrix4f(float a);
-		Matrix4f(float array[SIZE4][SIZE4]);
-		Matrix4f(const Matrix4f& m);
-		Matrix4f(vectormatrix::Matrix3f& b);
+		explicit Matrix4f(float a);
+		explicit Matrix4f(const float array[SIZE4][SIZE4]);
+		explicit Matrix4f(const Matrix3f& b);
 
 		// Operators
-		void operator=(const Matrix4f& m);
-		Matrix4f operator+(const Matrix4f& m);
-		void operator+=(const Matrix4f& m);
-		Matrix4f operator-(const Matrix4f& m);
-		void operator-=(const Matrix4f& m);
-		Matrix4f operator*(const Matrix4f& m);
-		void operator*=(const Matrix4f& m);
-		Matrix4f operator*(float a);
-		void operator*=(float a);
-		Vector4f operator*(Vector4f& v);
+		Matrix4f operator+(const Matrix4f& m) const;
+		Matrix4f& operator+=(const Matrix4f& m);
+		Matrix4f operator-(const Matrix4f& m) const;
+		Matrix4f& operator-=(const Matrix4f& m);
+		Matrix4f operator*(const Matrix4f& m) const;
+		Matrix4f& operator*=(const Matrix4f& m);
+		Matrix4f operator*(float a) const;
+		Matrix4f& operator*=(float a);
+		// W = A.V
+		Vector4f operator*(const Vector4f& v) const;
 
 		// Getters and Setters
 		float get(int x, int y) const;
@@ -52,5 +50,5 @@ namespace vectormatrix
 		friend std::ostream& operator<<(std::ostream&, const Matrix4f&);
 	};
 }
-#endif MATRIX4F_H
 
+#endif // MATRIX4F_H
