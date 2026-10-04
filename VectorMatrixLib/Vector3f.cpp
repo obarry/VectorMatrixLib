@@ -9,7 +9,10 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
 #include "Vector3f.h"
+#include "Exceptions.h"
+#include "MathTools.h"
 #include "Vector4f.h"
 #include "Matrix3f.h"
 
@@ -108,6 +111,16 @@ namespace vectormatrix
 		return x * v.x + y * v.y + z * v.z;
 	}
 
+	bool Vector3f::operator==(const Vector3f& v) const
+	{
+		return MathTools::equals(x, v.x) && MathTools::equals(y, v.y) && MathTools::equals(z, v.z);
+	}
+
+	bool Vector3f::operator!=(const Vector3f& v) const
+	{
+		return !(*this == v);
+	}
+
 	float Vector3f::get(int i) const
 	{
 		switch (i) {
@@ -118,7 +131,7 @@ namespace vectormatrix
 		case 2:
 			return z;
 		default:
-			return NAN;
+			throw IndexOutOfBoundException("Index out of bound while getting coordinate (" + std::to_string(i) + ") of Vector3f");
 		}
 	}
 
@@ -150,7 +163,7 @@ namespace vectormatrix
 			z = a;
 			break;
 		default:
-			break;
+			throw IndexOutOfBoundException("Index out of bound while setting coordinate (" + std::to_string(i) + ") of Vector3f");
 		}
 	}
 

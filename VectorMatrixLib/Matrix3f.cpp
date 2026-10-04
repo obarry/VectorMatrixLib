@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Matrix3f.h"
 #include "Matrix4f.h"
+#include "MathTools.h"
 
 namespace vectormatrix
 {
@@ -112,6 +113,19 @@ namespace vectormatrix
 	Vector3f Matrix3f::operator*(const Vector3f& v) const
 	{
 		return v * *this;
+	}
+
+	bool Matrix3f::operator==(const Matrix3f& m) const
+	{
+		for (int i = 0; i < SIZE3; i++)
+			for (int j = 0; j < SIZE3; j++)
+				if (!MathTools::equals(array_[i][j], m.array_[i][j])) return false;
+		return true;
+	}
+
+	bool Matrix3f::operator!=(const Matrix3f& m) const
+	{
+		return !(*this == m);
 	}
 
 	float Matrix3f::get(int x, int y) const

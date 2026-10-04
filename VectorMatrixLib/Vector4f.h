@@ -45,8 +45,11 @@ namespace vectormatrix
 		Vector4f& operator/=(float a);
 		// dot operator cannot use * operator as same signature than operator*(const Vector4f& v) except return type but that is not sufficient
 		float dot(const Vector4f& v) const;
+		// Equality within EPSILON tolerance
+		bool operator==(const Vector4f& v) const;
+		bool operator!=(const Vector4f& v) const;
 
-		// getter and setter
+		// getter and setter (get and set throw IndexOutOfBoundException if i is out of bound)
 		float get(int i) const;
 		float getX() const;
 		float getY() const;
