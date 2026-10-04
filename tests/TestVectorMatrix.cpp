@@ -21,7 +21,7 @@
 #include "Matrix4f.h"
 #include "Vector2f.h"
 #include "Matrix2f.h"
-#include "Quaternion.h"
+#include "Quaternionf.h"
 #include "MathTools.h"
 #include "Exceptions.h"
 
@@ -525,17 +525,17 @@ static void testMatrix2f()
 	CHECK_THROWS(Matrix2f(vs).inverse(), NotInvertibleMatrixException);
 }
 
-static void testQuaternion()
+static void testQuaternionf()
 {
 	const float PI = 3.14159265f;
 
-	Quaternion id;
-	CHECK(id == Quaternion(0, 0, 0, 1));
+	Quaternionf id;
+	CHECK(id == Quaternionf(0, 0, 0, 1));
 	CHECK(id.toMatrix3().isIdentity());
 	CHECK(id.toMatrix4().isIdentity());
 
 	// Rotation of 90 degrees around z: x axis goes to y axis
-	Quaternion rz(Vector3f(0, 0, 2), PI / 2); // the axis is normalized
+	Quaternionf rz(Vector3f(0, 0, 2), PI / 2); // the axis is normalized
 	CHECK_NEAR(rz.length(), 1.0f);
 	CHECK(rz.toMatrix3() * Vector3f::xAxis() == Vector3f::yAxis());
 	CHECK(rz.toMatrix4() * Vector4f::xAxis() == Vector4f::yAxis());
@@ -543,27 +543,27 @@ static void testQuaternion()
 	CHECK_NEAR(rz.toMatrix3().determinant(), 1.0f);
 
 	// Back and forth with rotation matrices
-	CHECK(Quaternion(rz.toMatrix3()) == rz);
-	CHECK(Quaternion(rz.toMatrix4()) == rz);
-	Quaternion rx(Vector3f::xAxis(), PI); // trace < 0 branches
-	CHECK(Quaternion(rx.toMatrix3()) == rx);
-	Quaternion ry(Vector3f::yAxis(), 0.9f * PI);
-	CHECK(Quaternion(ry.toMatrix3()) == ry);
-	Quaternion rzz(Vector3f::zAxis(), 0.9f * PI);
-	CHECK(Quaternion(rzz.toMatrix3()) == rzz);
+	CHECK(Quaternionf(rz.toMatrix3()) == rz);
+	CHECK(Quaternionf(rz.toMatrix4()) == rz);
+	Quaternionf rx(Vector3f::xAxis(), PI); // trace < 0 branches
+	CHECK(Quaternionf(rx.toMatrix3()) == rx);
+	Quaternionf ry(Vector3f::yAxis(), 0.9f * PI);
+	CHECK(Quaternionf(ry.toMatrix3()) == ry);
+	Quaternionf rzz(Vector3f::zAxis(), 0.9f * PI);
+	CHECK(Quaternionf(rzz.toMatrix3()) == rzz);
 
 	// Composition: 2 rotations of 90 degrees = 1 rotation of 180 degrees
-	Quaternion r180(Vector3f::zAxis(), PI);
+	Quaternionf r180(Vector3f::zAxis(), PI);
 	CHECK(rz * rz == r180);
-	Quaternion q(rz);
+	Quaternionf q(rz);
 	q *= rz;
 	CHECK(q == r180);
 	CHECK((rz * rz).toMatrix3() == rz.toMatrix3() * rz.toMatrix3());
 
 	// Conjugate and inverse
-	CHECK(rz.conjugate() == Quaternion(-rz.getX(), -rz.getY(), -rz.getZ(), rz.getW()));
+	CHECK(rz.conjugate() == Quaternionf(-rz.getX(), -rz.getY(), -rz.getZ(), rz.getW()));
 	CHECK(rz * rz.inverse() == id);
-	Quaternion big(1, 2, 3, 4);
+	Quaternionf big(1, 2, 3, 4);
 	CHECK(big * big.inverse() == id);
 	CHECK_NEAR(big.dot(big), big.lengthSquared());
 	CHECK_NEAR(big.normalize().length(), 1.0f);
@@ -576,15 +576,15 @@ static void testQuaternion()
 	CHECK(axis == Vector3f::xAxis()); // no meaningful axis for a null rotation
 
 	// Slerp
-	Quaternion r120(Vector3f::zAxis(), 2 * PI / 3);
-	Quaternion r60(Vector3f::zAxis(), PI / 3);
-	CHECK(Quaternion::slerp(id, r120, 0) == id);
-	CHECK(Quaternion::slerp(id, r120, 1) == r120);
-	CHECK(Quaternion::slerp(id, r120, 0.5f) == r60);
-	CHECK(Quaternion::slerp(rz, rz, 0.3f) == rz);
+	Quaternionf r120(Vector3f::zAxis(), 2 * PI / 3);
+	Quaternionf r60(Vector3f::zAxis(), PI / 3);
+	CHECK(Quaternionf::slerp(id, r120, 0) == id);
+	CHECK(Quaternionf::slerp(id, r120, 1) == r120);
+	CHECK(Quaternionf::slerp(id, r120, 0.5f) == r60);
+	CHECK(Quaternionf::slerp(rz, rz, 0.3f) == rz);
 	// q and -q are the same rotation: slerp takes the shorter path
-	Quaternion negRz(-rz.getX(), -rz.getY(), -rz.getZ(), -rz.getW());
-	CHECK(Quaternion::slerp(id, negRz, 1) == rz);
+	Quaternionf negRz(-rz.getX(), -rz.getY(), -rz.getZ(), -rz.getW());
+	CHECK(Quaternionf::slerp(id, negRz, 1) == rz);
 
 	// Accessors
 	q.set(0, 1);
@@ -608,7 +608,7 @@ int main()
 	testMatrix4fMethods();
 	testVector2f();
 	testMatrix2f();
-	testQuaternion();
+	testQuaternionf();
 
 	if (nb_failures == 0)
 	{

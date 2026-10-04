@@ -11,7 +11,7 @@ add_library(vectormatrix
 	VectorMatrixLib/Matrix2f.cpp
 	VectorMatrixLib/Matrix3f.cpp
 	VectorMatrixLib/Matrix4f.cpp
-	VectorMatrixLib/Quaternion.cpp
+	VectorMatrixLib/Quaternionf.cpp
 )
 target_include_directories(vectormatrix PUBLIC VectorMatrixLib)
 

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cmath>
 #include <string>
-#include "Quaternion.h"
+#include "Quaternionf.h"
 #include "Matrix3f.h"
 #include "Matrix4f.h"
 #include "Constants.h"
@@ -19,15 +19,15 @@
 
 namespace vectormatrix
 {
-	Quaternion::Quaternion() : x(0), y(0), z(0), w(1)
+	Quaternionf::Quaternionf() : x(0), y(0), z(0), w(1)
 	{
 	}
 
-	Quaternion::Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
+	Quaternionf::Quaternionf(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 	{
 	}
 
-	Quaternion::Quaternion(const Vector3f& axis, float angleRadians)
+	Quaternionf::Quaternionf(const Vector3f& axis, float angleRadians)
 	{
 		Vector3f a(axis);
 		a.normalize();
@@ -39,7 +39,7 @@ namespace vectormatrix
 		w = std::cos(half);
 	}
 
-	Quaternion::Quaternion(const Matrix3f& m)
+	Quaternionf::Quaternionf(const Matrix3f& m)
 	{
 		initFromRotationMatrix(
 			m.get(0, 0), m.get(0, 1), m.get(0, 2),
@@ -47,7 +47,7 @@ namespace vectormatrix
 			m.get(2, 0), m.get(2, 1), m.get(2, 2));
 	}
 
-	Quaternion::Quaternion(const Matrix4f& m)
+	Quaternionf::Quaternionf(const Matrix4f& m)
 	{
 		initFromRotationMatrix(
 			m.get(0, 0), m.get(0, 1), m.get(0, 2),
@@ -55,7 +55,7 @@ namespace vectormatrix
 			m.get(2, 0), m.get(2, 1), m.get(2, 2));
 	}
 
-	void Quaternion::initFromRotationMatrix(float m00, float m01, float m02,
+	void Quaternionf::initFromRotationMatrix(float m00, float m01, float m02,
 		float m10, float m11, float m12,
 		float m20, float m21, float m22)
 	{
@@ -94,37 +94,37 @@ namespace vectormatrix
 		}
 	}
 
-	Quaternion Quaternion::operator*(const Quaternion& q) const
+	Quaternionf Quaternionf::operator*(const Quaternionf& q) const
 	{
 		float rw = w * q.w - x * q.x - y * q.y - z * q.z;
 		float rx = w * q.x + x * q.w + y * q.z - z * q.y;
 		float ry = w * q.y - x * q.z + y * q.w + z * q.x;
 		float rz = w * q.z + x * q.y - y * q.x + z * q.w;
-		return Quaternion(rx, ry, rz, rw);
+		return Quaternionf(rx, ry, rz, rw);
 	}
 
-	Quaternion& Quaternion::operator*=(const Quaternion& q)
+	Quaternionf& Quaternionf::operator*=(const Quaternionf& q)
 	{
 		*this = *this * q;
 		return *this;
 	}
 
-	float Quaternion::dot(const Quaternion& q) const
+	float Quaternionf::dot(const Quaternionf& q) const
 	{
 		return x * q.x + y * q.y + z * q.z + w * q.w;
 	}
 
-	bool Quaternion::operator==(const Quaternion& q) const
+	bool Quaternionf::operator==(const Quaternionf& q) const
 	{
 		return MathTools::equals(x, q.x) && MathTools::equals(y, q.y) && MathTools::equals(z, q.z) && MathTools::equals(w, q.w);
 	}
 
-	bool Quaternion::operator!=(const Quaternion& q) const
+	bool Quaternionf::operator!=(const Quaternionf& q) const
 	{
 		return !(*this == q);
 	}
 
-	float Quaternion::get(int i) const
+	float Quaternionf::get(int i) const
 	{
 		switch (i) {
 		case 0:
@@ -136,31 +136,31 @@ namespace vectormatrix
 		case 3:
 			return w;
 		default:
-			throw IndexOutOfBoundException("Index out of bound while getting coordinate (" + std::to_string(i) + ") of Quaternion");
+			throw IndexOutOfBoundException("Index out of bound while getting coordinate (" + std::to_string(i) + ") of Quaternionf");
 		}
 	}
 
-	float Quaternion::getX() const
+	float Quaternionf::getX() const
 	{
 		return x;
 	}
 
-	float Quaternion::getY() const
+	float Quaternionf::getY() const
 	{
 		return y;
 	}
 
-	float Quaternion::getZ() const
+	float Quaternionf::getZ() const
 	{
 		return z;
 	}
 
-	float Quaternion::getW() const
+	float Quaternionf::getW() const
 	{
 		return w;
 	}
 
-	void Quaternion::set(int i, float v)
+	void Quaternionf::set(int i, float v)
 	{
 		switch (i) {
 		case 0:
@@ -176,41 +176,41 @@ namespace vectormatrix
 			w = v;
 			break;
 		default:
-			throw IndexOutOfBoundException("Index out of bound while setting coordinate (" + std::to_string(i) + ") of Quaternion");
+			throw IndexOutOfBoundException("Index out of bound while setting coordinate (" + std::to_string(i) + ") of Quaternionf");
 		}
 	}
 
-	void Quaternion::setX(float v)
+	void Quaternionf::setX(float v)
 	{
 		x = v;
 	}
 
-	void Quaternion::setY(float v)
+	void Quaternionf::setY(float v)
 	{
 		y = v;
 	}
 
-	void Quaternion::setZ(float v)
+	void Quaternionf::setZ(float v)
 	{
 		z = v;
 	}
 
-	void Quaternion::setW(float v)
+	void Quaternionf::setW(float v)
 	{
 		w = v;
 	}
 
-	float Quaternion::length() const
+	float Quaternionf::length() const
 	{
 		return std::sqrt(lengthSquared());
 	}
 
-	float Quaternion::lengthSquared() const
+	float Quaternionf::lengthSquared() const
 	{
 		return x * x + y * y + z * z + w * w;
 	}
 
-	Quaternion& Quaternion::normalize()
+	Quaternionf& Quaternionf::normalize()
 	{
 		float length = this->length();
 		x /= length;
@@ -220,18 +220,18 @@ namespace vectormatrix
 		return *this;
 	}
 
-	Quaternion Quaternion::conjugate() const
+	Quaternionf Quaternionf::conjugate() const
 	{
-		return Quaternion(-x, -y, -z, w);
+		return Quaternionf(-x, -y, -z, w);
 	}
 
-	Quaternion Quaternion::inverse() const
+	Quaternionf Quaternionf::inverse() const
 	{
 		float ls = lengthSquared();
-		return Quaternion(-x / ls, -y / ls, -z / ls, w / ls);
+		return Quaternionf(-x / ls, -y / ls, -z / ls, w / ls);
 	}
 
-	Matrix3f Quaternion::toMatrix3() const
+	Matrix3f Quaternionf::toMatrix3() const
 	{
 		float xx = x * x, yy = y * y, zz = z * z;
 		float xy = x * y, xz = x * z, yz = y * z;
@@ -244,14 +244,14 @@ namespace vectormatrix
 		return Matrix3f(a);
 	}
 
-	Matrix4f Quaternion::toMatrix4() const
+	Matrix4f Quaternionf::toMatrix4() const
 	{
 		Matrix4f r(toMatrix3());
 		r.set(3, 3, 1);
 		return r;
 	}
 
-	float Quaternion::toAxisAngle(Vector3f& axis) const
+	float Quaternionf::toAxisAngle(Vector3f& axis) const
 	{
 		// Guard w slightly past +/-1 (float rounding on a quaternion that is only approximately
 		// unit length) so acos() never receives an out-of-domain argument and returns NaN
@@ -273,7 +273,7 @@ namespace vectormatrix
 	}
 
 	// static member function (see declaration)
-	Quaternion Quaternion::slerp(const Quaternion& q1, const Quaternion& q2, float t)
+	Quaternionf Quaternionf::slerp(const Quaternionf& q1, const Quaternionf& q2, float t)
 	{
 		float cosOmega = q1.dot(q2);
 		float x2 = q2.x, y2 = q2.y, z2 = q2.z, w2 = q2.w;
@@ -299,7 +299,7 @@ namespace vectormatrix
 			scale1 = std::sin(t * omega) / sinOmega;
 		}
 
-		Quaternion result(
+		Quaternionf result(
 			scale0 * q1.x + scale1 * x2,
 			scale0 * q1.y + scale1 * y2,
 			scale0 * q1.z + scale1 * z2,
@@ -308,8 +308,8 @@ namespace vectormatrix
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& strm, const Quaternion& q)
+	std::ostream& operator<<(std::ostream& strm, const Quaternionf& q)
 	{
-		return strm << "Quaternion [" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << "]";
+		return strm << "Quaternionf [" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << "]";
 	}
 }

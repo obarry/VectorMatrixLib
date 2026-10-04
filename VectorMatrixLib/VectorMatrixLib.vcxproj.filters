@@ -45,7 +45,7 @@
     <ClInclude Include="Matrix2f.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
+    <ClInclude Include="Quaternionf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ClCompile Include="Matrix2f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
+    <ClCompile Include="Quaternionf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

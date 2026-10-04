@@ -153,7 +153,7 @@
     <ClInclude Include="GaussJordanSolver.h" />
     <ClInclude Include="Vector2f.h" />
     <ClInclude Include="Matrix2f.h" />
-    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Quaternionf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Matrix4f.cpp" />
@@ -163,7 +163,7 @@
     <ClCompile Include="Vector4f.cpp" />
     <ClCompile Include="Vector2f.cpp" />
     <ClCompile Include="Matrix2f.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Quaternionf.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
