@@ -12,6 +12,7 @@ add_library(vectormatrix
 	VectorMatrixLib/Matrix3f.cpp
 	VectorMatrixLib/Matrix4f.cpp
 	VectorMatrixLib/Quaternionf.cpp
+	VectorMatrixLib/GeometryTools.cpp
 )
 target_include_directories(vectormatrix PUBLIC VectorMatrixLib)
 
@@ -21,12 +22,27 @@ else()
 	target_compile_options(vectormatrix PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-# Demo program (same as the Visual Studio project)
-add_executable(vectormatrix_demo VectorMatrixLib/TestMatrix.cpp)
+# Console tour of the API (same program as the Visual Studio project)
+add_executable(vectormatrix_demo VectorMatrixLib/VectorMatrixDemo.cpp)
 target_link_libraries(vectormatrix_demo PRIVATE vectormatrix)
 
 # Unit tests
 enable_testing()
-add_executable(vectormatrix_tests tests/TestVectorMatrix.cpp)
+add_executable(vectormatrix_tests
+	tests/TestMain.cpp
+	tests/TestVectorMatrix.cpp
+	tests/TestVector2f.cpp
+	tests/TestVector3f.cpp
+	tests/TestVector4f.cpp
+	tests/TestMatrix2f.cpp
+	tests/TestMatrix3f.cpp
+	tests/TestMatrix4f.cpp
+	tests/TestQuaternionf.cpp
+	tests/TestGaussJordanSolver.cpp
+	tests/TestVector3fMatrix3f.cpp
+	tests/TestTools.cpp
+	tests/TestGeometryTools.cpp
+)
+target_include_directories(vectormatrix_tests PRIVATE tests)
 target_link_libraries(vectormatrix_tests PRIVATE vectormatrix)
 add_test(NAME vectormatrix_tests COMMAND vectormatrix_tests)
