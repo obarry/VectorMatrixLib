@@ -6,8 +6,9 @@
 // 
 // VectorMatrix Math Library
 //
-// Unit tests, without any third-party dependency.
-// Run them with: ctest --test-dir build --output-on-failure
+// Tests written for the C++ library itself during the upgrade (P0 to P3):
+// C++ specific behaviors (EPSILON comparisons, exceptions, conversions between classes)
+// that complement the tests ported from Aventura JUnit tests (TestVector3f.cpp, etc.).
 //
 
 #include <cmath>
@@ -24,26 +25,12 @@
 #include "Quaternionf.h"
 #include "MathTools.h"
 #include "Exceptions.h"
+#include "GeometryTools.h"
+#include "TestFramework.h"
 
 using namespace vectormatrix;
 
-static int nb_failures = 0;
-
-static void check(bool condition, const char* expression, const char* file, int line)
-{
-	if (!condition)
-	{
-		std::cerr << file << ":" << line << ": FAILED: " << expression << std::endl;
-		nb_failures++;
-	}
-}
-
-#define CHECK(expr) check((expr), #expr, __FILE__, __LINE__)
-#define CHECK_THROWS(expr, Exception) \
-	do { bool thrown = false; try { (void)(expr); } catch (const Exception&) { thrown = true; } check(thrown, #expr " throws " #Exception, __FILE__, __LINE__); } while (0)
-#define CHECK_NEAR(a, b) check(MathTools::equals((a), (b)), #a " == " #b, __FILE__, __LINE__)
-
-static void testMathTools()
+TEST(CppSpecific, MathTools)
 {
 	CHECK(MathTools::equals(1.0f, 1.0f + EPSILON / 2));
 	CHECK(!MathTools::equals(1.0f, 1.0f + EPSILON * 2));
@@ -73,7 +60,7 @@ static void testMathTools()
 	}
 }
 
-static void testVector3f()
+TEST(CppSpecific, Vector3f)
 {
 	Vector3f a(1, 2, 3);
 	Vector3f b(4, 5, 6);
@@ -109,7 +96,7 @@ static void testVector3f()
 	CHECK(a.V4() == Vector4f(1, 2, 3, 0));
 }
 
-static void testVector4f()
+TEST(CppSpecific, Vector4f)
 {
 	Vector4f a(1, 2, 3, 4);
 	Vector4f b(5, 6, 7, 8);
@@ -142,7 +129,7 @@ static void testVector4f()
 	CHECK(Vector4f::interpolate(a, b, 0.25f) == Vector4f(2, 3, 4, 5));
 }
 
-static void testMatrix3f()
+TEST(CppSpecific, Matrix3f)
 {
 	float va[3][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 	float vb[3][3] = { { 9, 8, 7 }, { 6, 5, 4 }, { 3, 2, 1 } };
@@ -173,7 +160,7 @@ static void testMatrix3f()
 	CHECK(v == Vector3f(-2, -2, -2));
 }
 
-static void testMatrix4f()
+TEST(CppSpecific, Matrix4f)
 {
 	float va[4][4] = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
 	Matrix4f a(va);
@@ -211,7 +198,7 @@ static void testMatrix4f()
 	}
 }
 
-static void testVector3fMethods()
+TEST(CppSpecific, Vector3fMethods)
 {
 	CHECK(Vector3f::xAxis() == Vector3f(1, 0, 0));
 	CHECK(Vector3f::zOppAxis() == Vector3f(0, 0, -1));
@@ -251,7 +238,7 @@ static void testVector3fMethods()
 	CHECK(Vector3f(m, 1) == Vector3f(2, 5, 8));
 }
 
-static void testVector4fMethods()
+TEST(CppSpecific, Vector4fMethods)
 {
 	CHECK(Vector4f::yAxis() == Vector4f(0, 1, 0, 0));
 	CHECK(Vector4f::xOppAxis() == Vector4f(-1, 0, 0, 0));
@@ -310,7 +297,7 @@ static void testVector4fMethods()
 	CHECK(Vector4f(m, 2) == Vector4f(3, 7, 11, 15));
 }
 
-static void testMatrix3fMethods()
+TEST(CppSpecific, Matrix3fMethods)
 {
 	float va[3][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 	Matrix3f a(va);
@@ -366,7 +353,7 @@ static void testMatrix3fMethods()
 	CHECK_THROWS(a.inverse(), NotInvertibleMatrixException);
 }
 
-static void testMatrix4fMethods()
+TEST(CppSpecific, Matrix4fMethods)
 {
 	CHECK(Matrix4f::identity().isIdentity());
 	CHECK_NEAR(Matrix4f::identity().trace(), 4.0f);
@@ -414,7 +401,7 @@ static void testMatrix4fMethods()
 	CHECK_THROWS(b.setArray(std::vector<std::vector<float>>(3, std::vector<float>(3))), MatrixArrayWrongSizeException);
 }
 
-static void testVector2f()
+TEST(CppSpecific, Vector2f)
 {
 	Vector2f a(1, 2);
 	Vector2f b(3, 5);
@@ -470,7 +457,7 @@ static void testVector2f()
 	CHECK(c == Vector2f(5, 11));
 }
 
-static void testMatrix2f()
+TEST(CppSpecific, Matrix2f)
 {
 	float va[2][2] = { { 1, 2 }, { 3, 4 } };
 	float vb[2][2] = { { 5, 6 }, { 7, 8 } };
@@ -525,7 +512,7 @@ static void testMatrix2f()
 	CHECK_THROWS(Matrix2f(vs).inverse(), NotInvertibleMatrixException);
 }
 
-static void testQuaternionf()
+TEST(CppSpecific, Quaternionf)
 {
 	const float PI = 3.14159265f;
 
@@ -595,26 +582,17 @@ static void testQuaternionf()
 	CHECK_THROWS(q.set(-1, 0), IndexOutOfBoundException);
 }
 
-int main()
+TEST(CppSpecific, GeometryToolsRaggedRows)
 {
-	testMathTools();
-	testVector3f();
-	testVector4f();
-	testMatrix3f();
-	testMatrix4f();
-	testVector3fMethods();
-	testVector4fMethods();
-	testMatrix3fMethods();
-	testMatrix4fMethods();
-	testVector2f();
-	testMatrix2f();
-	testQuaternionf();
-
-	if (nb_failures == 0)
-	{
-		std::cout << "All tests passed" << std::endl;
-		return 0;
-	}
-	std::cerr << nb_failures << " check(s) failed" << std::endl;
-	return 1;
+	// Unlike Aventura, which assumes all rows have the length of the first one,
+	// the 2D center counts every point, so rows may have different lengths
+	std::vector<std::vector<Vector4f>> points = {
+		{ Vector4f(0, 0, 0, 1) },
+		{},
+		{ Vector4f(3, 0, 0, 1), Vector4f(0, 6, 9, 1) }
+	};
+	std::optional<Vector4f> center = GeometryTools::center(points);
+	CHECK(center.has_value());
+	if (center) CHECK_EQUAL(*center, Vector4f(1, 2, 3, 1));
+	CHECK(!GeometryTools::center(std::vector<std::vector<Vector4f>>{ {}, {} }).has_value());
 }

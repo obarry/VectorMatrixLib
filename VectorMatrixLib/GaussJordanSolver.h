@@ -71,19 +71,8 @@ namespace vectormatrix
 			}
 		}
 
-	private:
-		template <int N>
-		static void swapRows(float (&a)[N][N], int r1, int r2)
-		{
-			for (int col = 0; col < N; col++)
-			{
-				float tmp = a[r1][col];
-				a[r1][col] = a[r2][col];
-				a[r2][col] = tmp;
-			}
-		}
-
-		// Row index (from pivot row down) of the greatest absolute value in column col
+		// Row index (from pivot row down) of the greatest absolute value in column col.
+		// Public so that the partial pivoting can be tested directly (package-private in Aventura).
 		template <int N>
 		static int indiceOfMaxRowInColumn(const float (&m)[N][N], int col, int pivot)
 		{
@@ -99,6 +88,18 @@ namespace vectormatrix
 				}
 			}
 			return indiceMax;
+		}
+
+	private:
+		template <int N>
+		static void swapRows(float (&a)[N][N], int r1, int r2)
+		{
+			for (int col = 0; col < N; col++)
+			{
+				float tmp = a[r1][col];
+				a[r1][col] = a[r2][col];
+				a[r2][col] = tmp;
+			}
 		}
 	};
 }
