@@ -143,6 +143,9 @@
     <ClInclude Include="Matrix4f.h" />
     <ClInclude Include="Vector3f.h" />
     <ClInclude Include="Vector4f.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="MathTools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Matrix4f.cpp" />

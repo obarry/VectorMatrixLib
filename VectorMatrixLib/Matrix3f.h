@@ -40,6 +40,9 @@ namespace vectormatrix
 		Matrix3f& operator*=(float a);
 		// W = A.V
 		Vector3f operator*(const Vector3f& v) const;
+		// Equality within EPSILON tolerance
+		bool operator==(const Matrix3f& m) const;
+		bool operator!=(const Matrix3f& m) const;
 
 		// Getters and Setters
 		float get(int x, int y) const;
