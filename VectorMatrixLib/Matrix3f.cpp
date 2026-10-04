@@ -8,9 +8,12 @@
 //
 
 #include <iostream>
+#include <string>
 #include "Matrix3f.h"
 #include "Matrix4f.h"
 #include "MathTools.h"
+#include "Exceptions.h"
+#include "GaussJordanSolver.h"
 
 namespace vectormatrix
 {
@@ -136,6 +139,106 @@ namespace vectormatrix
 	void Matrix3f::set(int x, int y, float a)
 	{
 		array_[x][y] = a;
+	}
+
+	Matrix3f Matrix3f::identity()
+	{
+		Matrix3f r;
+		r.setDiagonal(1);
+		return r;
+	}
+
+	void Matrix3f::setDiagonal(float v)
+	{
+		for (int i = 0; i < SIZE3; i++)
+			array_[i][i] = v;
+	}
+
+	Vector3f Matrix3f::getRow(int r) const
+	{
+		if (r < 0 || r >= SIZE3) throw IndexOutOfBoundException("Index out of bound while getting Row (" + std::to_string(r) + ") of Matrix3f");
+		return Vector3f(r, *this);
+	}
+
+	Vector3f Matrix3f::getColumn(int c) const
+	{
+		if (c < 0 || c >= SIZE3) throw IndexOutOfBoundException("Index out of bound while getting Column (" + std::to_string(c) + ") of Matrix3f");
+		return Vector3f(*this, c);
+	}
+
+	void Matrix3f::setRow(int r, const Vector3f& v)
+	{
+		if (r < 0 || r >= SIZE3) throw IndexOutOfBoundException("Index out of bound while setting Row (" + std::to_string(r) + ") of Matrix3f");
+		for (int j = 0; j < SIZE3; j++)
+			array_[r][j] = v.get(j);
+	}
+
+	void Matrix3f::setColumn(int c, const Vector3f& v)
+	{
+		if (c < 0 || c >= SIZE3) throw IndexOutOfBoundException("Index out of bound while setting Column (" + std::to_string(c) + ") of Matrix3f");
+		for (int i = 0; i < SIZE3; i++)
+			array_[i][c] = v.get(i);
+	}
+
+	std::vector<std::vector<float>> Matrix3f::getArray() const
+	{
+		std::vector<std::vector<float>> a(SIZE3, std::vector<float>(SIZE3));
+		for (int i = 0; i < SIZE3; i++)
+			for (int j = 0; j < SIZE3; j++)
+				a[i][j] = array_[i][j];
+		return a;
+	}
+
+	void Matrix3f::setArray(const std::vector<std::vector<float>>& a)
+	{
+		if (a.size() != SIZE3) throw MatrixArrayWrongSizeException("Wrong array row size (" + std::to_string(a.size()) + ") while setting Matrix3f from array");
+		for (int i = 0; i < SIZE3; i++)
+			if (a[i].size() != SIZE3) throw MatrixArrayWrongSizeException("Wrong array column size (" + std::to_string(a[i].size()) + ") while setting Matrix3f from array");
+		for (int i = 0; i < SIZE3; i++)
+			for (int j = 0; j < SIZE3; j++)
+				array_[i][j] = a[i][j];
+	}
+
+	float Matrix3f::trace() const
+	{
+		float t = 0;
+		for (int i = 0; i < SIZE3; i++)
+			t += array_[i][i];
+		return t;
+	}
+
+	bool Matrix3f::isIdentity() const
+	{
+		return *this == identity();
+	}
+
+	float Matrix3f::determinant() const
+	{
+		return array_[0][0] * (array_[1][1] * array_[2][2] - array_[1][2] * array_[2][1])
+			- array_[0][1] * (array_[1][0] * array_[2][2] - array_[1][2] * array_[2][0])
+			+ array_[0][2] * (array_[1][0] * array_[2][1] - array_[1][1] * array_[2][0]);
+	}
+
+	Matrix3f Matrix3f::transpose() const
+	{
+		Matrix3f r;
+		for (int i = 0; i < SIZE3; i++)
+			for (int j = 0; j < SIZE3; j++)
+				r.array_[i][j] = array_[j][i];
+		return r;
+	}
+
+	Matrix3f& Matrix3f::transposeEquals()
+	{
+		*this = transpose();
+		return *this;
+	}
+
+	Matrix3f Matrix3f::inverse() const
+	{
+		Matrix3f r;
+		GaussJordanSolver::invert<SIZE3>(array_, r.array_, EPSILON);
+		return r;
 	}
 
 	std::ostream& operator<<(std::ostream& strm, const Matrix3f& m)

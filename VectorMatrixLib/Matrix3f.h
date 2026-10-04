@@ -11,6 +11,7 @@
 #define MATRIX3F_H
 
 #include <iostream>
+#include <vector>
 #include "Vector3f.h"
 
 namespace vectormatrix
@@ -22,6 +23,9 @@ namespace vectormatrix
 	public:
 		// Constants
 		static const int SIZE3 = 3;
+
+		// Identity matrix (a new copy is returned each time)
+		static Matrix3f identity();
 
 		// Constructors
 		Matrix3f();
@@ -47,6 +51,23 @@ namespace vectormatrix
 		// Getters and Setters
 		float get(int x, int y) const;
 		void set(int x, int y, float a);
+		void setDiagonal(float v);
+		// Rows and columns (throw IndexOutOfBoundException if the index is out of bound)
+		Vector3f getRow(int r) const;
+		Vector3f getColumn(int c) const;
+		void setRow(int r, const Vector3f& v);
+		void setColumn(int c, const Vector3f& v);
+		// Copy of the elements, and set from an array (throws MatrixArrayWrongSizeException if not 3x3)
+		std::vector<std::vector<float>> getArray() const;
+		void setArray(const std::vector<std::vector<float>>& a);
+		// Other methods
+		float trace() const;
+		bool isIdentity() const;
+		float determinant() const;
+		Matrix3f transpose() const;
+		Matrix3f& transposeEquals();
+		// Throws NotInvertibleMatrixException if this matrix is singular
+		Matrix3f inverse() const;
 
 	private:
 		float array_[SIZE3][SIZE3];

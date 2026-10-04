@@ -36,6 +36,9 @@
     <ClInclude Include="MathTools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GaussJordanSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3f.cpp">
