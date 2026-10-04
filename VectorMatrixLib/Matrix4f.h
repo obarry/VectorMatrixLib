@@ -11,6 +11,7 @@
 #define MATRIX4F_H
 
 #include <iostream>
+#include <vector>
 #include "Vector4f.h"
 
 namespace vectormatrix
@@ -22,6 +23,9 @@ namespace vectormatrix
 	public:
 		// Constants
 		static const int SIZE4 = 4;
+
+		// Identity matrix (a new copy is returned each time)
+		static Matrix4f identity();
 
 		// Constructors
 		Matrix4f();
@@ -47,6 +51,25 @@ namespace vectormatrix
 		// Getters and Setters
 		float get(int x, int y) const;
 		void set(int x, int y, float a);
+		void setDiagonal(float v);
+		// Rows and columns (throw IndexOutOfBoundException if the index is out of bound)
+		Vector4f getRow(int r) const;
+		Vector4f getColumn(int c) const;
+		void setRow(int r, const Vector4f& v);
+		void setColumn(int c, const Vector4f& v);
+		// Copy of the elements, and set from an array (throws MatrixArrayWrongSizeException if not 4x4)
+		std::vector<std::vector<float>> getArray() const;
+		void setArray(const std::vector<std::vector<float>>& a);
+		// Upper-left 3x3 part of this matrix
+		Matrix3f getMatrix3() const;
+		// Other methods
+		float trace() const;
+		bool isIdentity() const;
+		float determinant() const;
+		Matrix4f transpose() const;
+		Matrix4f& transposeEquals();
+		// Throws NotInvertibleMatrixException if this matrix is singular
+		Matrix4f inverse() const;
 
 	private:
 		float array_[SIZE4][SIZE4];

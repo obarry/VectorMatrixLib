@@ -11,7 +11,9 @@
 //
 
 #include <cmath>
+#include <array>
 #include <string>
+#include <vector>
 #include <iostream>
 #include "Vector3f.h"
 #include "Vector4f.h"
@@ -206,6 +208,209 @@ static void testMatrix4f()
 	}
 }
 
+static void testVector3fMethods()
+{
+	CHECK(Vector3f::xAxis() == Vector3f(1, 0, 0));
+	CHECK(Vector3f::zOppAxis() == Vector3f(0, 0, -1));
+	CHECK(Vector3f::zeroVector() == Vector3f(0, 0, 0));
+	CHECK(Vector3f::xAxis().cross(Vector3f::yAxis()) == Vector3f::zAxis());
+
+	Vector3f a(1, 2, 3);
+	Vector3f b(4, 5, 6);
+	CHECK(a.cross(b) == a * b);
+	Vector3f c(a);
+	c.crossEquals(b);
+	CHECK(c == Vector3f(-3, 6, -3));
+
+	CHECK_NEAR(a.lengthSquared(), 14.0f);
+	CHECK_NEAR(a.distanceSquared(b), 27.0f);
+	CHECK_NEAR(Vector3f(1, 1, 1).distance(Vector3f(1, 4, 5)), 5.0f);
+
+	c.set(7, 8, 9);
+	CHECK(c == Vector3f(7, 8, 9));
+	std::array<float, 3> array = c.toArray();
+	CHECK_NEAR(array[2], 9.0f);
+	float dest[3];
+	CHECK(c.toArray(dest) == dest);
+	CHECK_NEAR(dest[0], 7.0f);
+
+	CHECK(Vector3f(std::vector<float>{ 1, 2, 3 }) == a);
+	CHECK_THROWS(Vector3f(std::vector<float>{ 1, 2 }), VectorArrayWrongSizeException);
+
+	// From Vector4f
+	CHECK(Vector3f(Vector4f(1, 2, 3, 4)) == a);
+	CHECK(Vector3f(Vector4f(1, 1, 1, 1), Vector4f(2, 3, 4, 1)) == a);
+
+	// Row and column of a matrix
+	float va[3][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+	Matrix3f m(va);
+	CHECK(Vector3f(1, m) == Vector3f(4, 5, 6));
+	CHECK(Vector3f(m, 1) == Vector3f(2, 5, 8));
+}
+
+static void testVector4fMethods()
+{
+	CHECK(Vector4f::yAxis() == Vector4f(0, 1, 0, 0));
+	CHECK(Vector4f::xOppAxis() == Vector4f(-1, 0, 0, 0));
+	CHECK(Vector4f::zeroPoint() == Vector4f(0, 0, 0, 1));
+	CHECK(Vector4f::zeroPoint().isPoint());
+	CHECK(Vector4f::zeroVector().isVector());
+
+	Vector4f a(1, 2, 3, 0);
+	Vector4f b(4, 5, 6, 0);
+	CHECK(a.cross(b) == Vector4f(-3, 6, -3, 0));
+	Vector4f c(a);
+	c.crossEquals(b);
+	CHECK(c == a * b);
+
+	// Vector ab from 2 points
+	Vector4f p1(1, 1, 1, 1);
+	Vector4f p2(2, 3, 4, 1);
+	CHECK(Vector4f(p1, p2) == a);
+	CHECK((p1 + Vector3f(1, 2, 3)) == p2);
+	CHECK((p2 - Vector3f(1, 2, 3)) == p1);
+
+	// 3D point
+	Vector4f h(2, 4, 6, 2);
+	CHECK_NEAR(h.get3DX(), 1.0f);
+	CHECK_NEAR(h.get3DY(), 2.0f);
+	CHECK_NEAR(h.get3DZ(), 3.0f);
+	CHECK(h.get3DPoint().has_value());
+	CHECK(*h.get3DPoint() == Vector3f(1, 2, 3));
+	CHECK(!a.get3DPoint().has_value());
+	CHECK(h.V3() == Vector3f(2, 4, 6));
+
+	c.set(1, 2, 3, 4);
+	CHECK(c == Vector4f(1, 2, 3, 4));
+	c.vector();
+	CHECK(c.isVector());
+	c.point();
+	CHECK(c.isPoint());
+	CHECK_NEAR(c.getW(), 1.0f);
+
+	CHECK_NEAR(Vector4f(1, 2, 3, 4).lengthSquared(), 30.0f);
+	CHECK_NEAR(Vector4f(0, 0, 0, 1).distance(Vector4f(0, 3, 4, 1)), 5.0f);
+	CHECK_NEAR(Vector4f(0, 0, 0, 1).distanceSquared(Vector4f(0, 3, 4, 1)), 25.0f);
+
+	std::array<float, 4> array = h.toArray();
+	CHECK_NEAR(array[3], 2.0f);
+	float dest[4];
+	h.toArray(dest);
+	CHECK_NEAR(dest[1], 4.0f);
+
+	CHECK(Vector4f(std::vector<float>{ 1, 2, 3, 0 }) == a);
+	CHECK_THROWS(Vector4f(std::vector<float>{ 1, 2, 3 }), VectorArrayWrongSizeException);
+
+	float va[4][4] = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
+	Matrix4f m(va);
+	CHECK(Vector4f(2, m) == Vector4f(9, 10, 11, 12));
+	CHECK(Vector4f(m, 2) == Vector4f(3, 7, 11, 15));
+}
+
+static void testMatrix3fMethods()
+{
+	float va[3][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+	Matrix3f a(va);
+
+	CHECK(Matrix3f::identity().isIdentity());
+	CHECK(!a.isIdentity());
+	CHECK(a * Matrix3f::identity() == a);
+	Matrix3f d;
+	d.setDiagonal(2);
+	CHECK(d == Matrix3f::identity() * 2.0f);
+
+	CHECK(a.getRow(0) == Vector3f(1, 2, 3));
+	CHECK(a.getColumn(0) == Vector3f(1, 4, 7));
+	CHECK_THROWS(a.getRow(3), IndexOutOfBoundException);
+	CHECK_THROWS(a.getColumn(-1), IndexOutOfBoundException);
+	Matrix3f b(a);
+	b.setRow(1, Vector3f(0, 0, 0));
+	CHECK(b.getRow(1) == Vector3f(0, 0, 0));
+	b.setColumn(2, Vector3f(1, 1, 1));
+	CHECK(b.getColumn(2) == Vector3f(1, 1, 1));
+	CHECK_THROWS(b.setRow(3, Vector3f()), IndexOutOfBoundException);
+	CHECK_THROWS(b.setColumn(3, Vector3f()), IndexOutOfBoundException);
+
+	std::vector<std::vector<float>> array = a.getArray();
+	CHECK(array.size() == 3 && array[2].size() == 3);
+	CHECK_NEAR(array[2][1], 8.0f);
+	array[2][1] = 0; // a copy
+	CHECK_NEAR(a.get(2, 1), 8.0f);
+	b.setArray(array);
+	CHECK_NEAR(b.get(2, 1), 0.0f);
+	CHECK_THROWS(b.setArray(std::vector<std::vector<float>>(2, std::vector<float>(3))), MatrixArrayWrongSizeException);
+	CHECK_THROWS(b.setArray(std::vector<std::vector<float>>(3, std::vector<float>(4))), MatrixArrayWrongSizeException);
+
+	CHECK_NEAR(a.trace(), 15.0f);
+	CHECK_NEAR(a.determinant(), 0.0f);
+	CHECK_NEAR(Matrix3f::identity().determinant(), 1.0f);
+
+	float vt[3][3] = { { 1, 4, 7 }, { 2, 5, 8 }, { 3, 6, 9 } };
+	CHECK(a.transpose() == Matrix3f(vt));
+	b = a;
+	b.transposeEquals();
+	CHECK(b == Matrix3f(vt));
+
+	// Inverse
+	float vi[3][3] = { { 2, -1, 0 }, { -1, 2, -1 }, { 0, -1, 2 } };
+	Matrix3f m(vi);
+	CHECK_NEAR(m.determinant(), 4.0f);
+	Matrix3f inv = m.inverse();
+	CHECK((m * inv).isIdentity());
+	CHECK((inv * m).isIdentity());
+	CHECK(inv.inverse() == m);
+	CHECK(Matrix3f::identity().inverse().isIdentity());
+	CHECK_THROWS(a.inverse(), NotInvertibleMatrixException);
+}
+
+static void testMatrix4fMethods()
+{
+	CHECK(Matrix4f::identity().isIdentity());
+	CHECK_NEAR(Matrix4f::identity().trace(), 4.0f);
+	CHECK_NEAR(Matrix4f::identity().determinant(), 1.0f);
+
+	// Same matrix as Aventura testMatrix4_inverse1 and testMatrix4_inverse2
+	float va[4][4];
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			va[i][j] = (i > j) ? 0.0f : static_cast<float>(10 - 2 * i - j);
+	Matrix4f a(va);
+	CHECK_NEAR(a.determinant(), 280.0f); // triangular: 10 * 7 * 4 * 1
+	Matrix4f inv = a.inverse();
+	CHECK(inv.inverse() == a);
+	CHECK(inv * a == Matrix4f::identity());
+
+	// Same matrix as Aventura testMatrix4_inverse_precision_generalCase
+	float vg[4][4] = { { 4, 7, 2, 1 }, { 3, 5, 1, 2 }, { 2, 3, 1, 0 }, { 1, 0, 2, 3 } };
+	Matrix4f g(vg);
+	CHECK((g * g.inverse()).isIdentity());
+	CHECK_NEAR(g.determinant(), g.transpose().determinant());
+
+	// Singular matrix (last row is 0)
+	Matrix4f singular(a);
+	singular.setRow(3, Vector4f());
+	CHECK_NEAR(singular.determinant(), 0.0f);
+	CHECK_THROWS(singular.inverse(), NotInvertibleMatrixException);
+
+	CHECK(a.getRow(1) == Vector4f(0, 7, 6, 5));
+	CHECK(a.getColumn(3) == Vector4f(7, 5, 3, 1));
+	CHECK_THROWS(a.getRow(4), IndexOutOfBoundException);
+	CHECK(a.transpose().getRow(3) == a.getColumn(3));
+	Matrix4f t(a);
+	t.transposeEquals();
+	CHECK(t == a.transpose());
+
+	Matrix3f m3 = a.getMatrix3();
+	CHECK(m3.getRow(0) == Vector3f(10, 9, 8));
+	CHECK(m3 == Matrix3f(a));
+
+	std::vector<std::vector<float>> array = a.getArray();
+	Matrix4f b;
+	b.setArray(array);
+	CHECK(b == a);
+	CHECK_THROWS(b.setArray(std::vector<std::vector<float>>(3, std::vector<float>(3))), MatrixArrayWrongSizeException);
+}
+
 int main()
 {
 	testMathTools();
@@ -213,6 +418,10 @@ int main()
 	testVector4f();
 	testMatrix3f();
 	testMatrix4f();
+	testVector3fMethods();
+	testVector4fMethods();
+	testMatrix3fMethods();
+	testMatrix4fMethods();
 
 	if (nb_failures == 0)
 	{
