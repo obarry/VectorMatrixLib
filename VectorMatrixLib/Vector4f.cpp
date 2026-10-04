@@ -268,12 +268,12 @@ namespace vectormatrix
 		}
 	}
 
-	void Vector4f::set(float x, float y, float z, float w)
+	void Vector4f::set(float nx, float ny, float nz, float nw)
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		this->w = w;
+		x = nx;
+		y = ny;
+		z = nz;
+		w = nw;
 	}
 
 	void Vector4f::setX(float v)

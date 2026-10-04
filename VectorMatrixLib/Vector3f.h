@@ -78,7 +78,7 @@ namespace vectormatrix
 		float getZ() const;
 
 		void set(int i, float v);
-		void set(float x, float y, float z);
+		void set(float nx, float ny, float nz);
 		void setX(float v);
 		void setY(float v);
 		void setZ(float v);

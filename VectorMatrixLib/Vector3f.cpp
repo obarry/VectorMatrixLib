@@ -237,11 +237,11 @@ namespace vectormatrix
 		}
 	}
 
-	void Vector3f::set(float x, float y, float z)
+	void Vector3f::set(float nx, float ny, float nz)
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
+		x = nx;
+		y = ny;
+		z = nz;
 	}
 
 	void Vector3f::setX(float v)

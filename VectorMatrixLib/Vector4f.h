@@ -90,7 +90,7 @@ namespace vectormatrix
 		std::optional<Vector3f> get3DPoint() const;
 
 		void set(int i, float v);
-		void set(float x, float y, float z, float w);
+		void set(float nx, float ny, float nz, float nw);
 		void setX(float v);
 		void setY(float v);
 		void setZ(float v);
