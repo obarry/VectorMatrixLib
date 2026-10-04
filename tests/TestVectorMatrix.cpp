@@ -19,6 +19,9 @@
 #include "Vector4f.h"
 #include "Matrix3f.h"
 #include "Matrix4f.h"
+#include "Vector2f.h"
+#include "Matrix2f.h"
+#include "Quaternion.h"
 #include "MathTools.h"
 #include "Exceptions.h"
 
@@ -411,6 +414,187 @@ static void testMatrix4fMethods()
 	CHECK_THROWS(b.setArray(std::vector<std::vector<float>>(3, std::vector<float>(3))), MatrixArrayWrongSizeException);
 }
 
+static void testVector2f()
+{
+	Vector2f a(1, 2);
+	Vector2f b(3, 5);
+
+	CHECK(a + b == Vector2f(4, 7));
+	CHECK(b - a == Vector2f(2, 3));
+	CHECK(a * 2 == Vector2f(2, 4));
+	CHECK(b / 2 == Vector2f(1.5f, 2.5f));
+	CHECK_NEAR(a.dot(b), 13.0f);
+	CHECK(a != b);
+
+	Vector2f c(a);
+	(c += b) -= a;
+	CHECK(c == b);
+	c *= 2;
+	c /= 2;
+	CHECK(c == b);
+
+	CHECK_NEAR(Vector2f(3, 4).length(), 5.0f);
+	CHECK_NEAR(Vector2f(3, 4).lengthSquared(), 25.0f);
+	CHECK_NEAR(a.distance(Vector2f(4, 6)), 5.0f);
+	CHECK_NEAR(a.distanceSquared(Vector2f(4, 6)), 25.0f);
+	Vector2f n(3, 4);
+	CHECK(n.normalize() == Vector2f(0.6f, 0.8f));
+	CHECK(n == Vector2f(0.6f, 0.8f)); // normalize() modifies this vector
+
+	c.setX(7);
+	c.setY(8);
+	CHECK(c == Vector2f(7, 8));
+	c.set(1, 0);
+	CHECK_NEAR(c.getY(), 0.0f);
+	CHECK_THROWS(c.get(2), IndexOutOfBoundException);
+	CHECK_THROWS(c.set(-1, 0), IndexOutOfBoundException);
+
+	std::array<float, 2> array = b.toArray();
+	CHECK_NEAR(array[1], 5.0f);
+	float dest[2];
+	b.toArray(dest);
+	CHECK_NEAR(dest[0], 3.0f);
+	float arr[2] = { 1, 2 };
+	CHECK(Vector2f(arr) == a);
+	CHECK(Vector2f(std::vector<float>{ 1, 2 }) == a);
+	CHECK_THROWS(Vector2f(std::vector<float>{ 1 }), VectorArrayWrongSizeException);
+	CHECK(Vector2f::interpolate(a, b, 0.5f) == Vector2f(2, 3.5f));
+
+	// W = A.V
+	float va[2][2] = { { 1, 2 }, { 3, 4 } };
+	Matrix2f m(va);
+	CHECK(m * a == Vector2f(5, 11));
+	CHECK(a * m == m * a);
+	c = a;
+	c *= m;
+	CHECK(c == Vector2f(5, 11));
+}
+
+static void testMatrix2f()
+{
+	float va[2][2] = { { 1, 2 }, { 3, 4 } };
+	float vb[2][2] = { { 5, 6 }, { 7, 8 } };
+	float vab[2][2] = { { 19, 22 }, { 43, 50 } };
+	Matrix2f a(va);
+	Matrix2f b(vb);
+
+	CHECK(a + b == Matrix2f(vab) - Matrix2f(vab) + a + b);
+	CHECK((a + b) - b == a);
+	CHECK(a * b == Matrix2f(vab));
+	CHECK(a * 2.0f == a + a);
+	Matrix2f c(a);
+	c *= b;
+	CHECK(c == Matrix2f(vab));
+	c -= Matrix2f(vab);
+	CHECK(c == Matrix2f());
+
+	CHECK(Matrix2f::identity().isIdentity());
+	CHECK(a * Matrix2f::identity() == a);
+	Matrix2f d;
+	d.setDiagonal(3);
+	CHECK(d == Matrix2f::identity() * 3.0f);
+
+	CHECK(a.getRow(1) == Vector2f(3, 4));
+	CHECK(a.getColumn(1) == Vector2f(2, 4));
+	CHECK_THROWS(a.getRow(2), IndexOutOfBoundException);
+	c = a;
+	c.setRow(0, Vector2f(9, 9));
+	c.setColumn(1, Vector2f(0, 0));
+	CHECK(c.getRow(0) == Vector2f(9, 0));
+	CHECK(c.getRow(1) == Vector2f(3, 0));
+	CHECK_THROWS(c.setColumn(2, Vector2f()), IndexOutOfBoundException);
+
+	std::vector<std::vector<float>> array = a.getArray();
+	Matrix2f e;
+	e.setArray(array);
+	CHECK(e == a);
+	CHECK_THROWS(e.setArray(std::vector<std::vector<float>>(3, std::vector<float>(2))), MatrixArrayWrongSizeException);
+
+	CHECK_NEAR(a.trace(), 5.0f);
+	CHECK_NEAR(a.determinant(), -2.0f);
+	float vt[2][2] = { { 1, 3 }, { 2, 4 } };
+	CHECK(a.transpose() == Matrix2f(vt));
+	c = a;
+	c.transposeEquals();
+	CHECK(c == Matrix2f(vt));
+
+	float vi[2][2] = { { -2, 1 }, { 1.5f, -0.5f } };
+	CHECK(a.inverse() == Matrix2f(vi));
+	CHECK((a * a.inverse()).isIdentity());
+	float vs[2][2] = { { 1, 2 }, { 2, 4 } };
+	CHECK_THROWS(Matrix2f(vs).inverse(), NotInvertibleMatrixException);
+}
+
+static void testQuaternion()
+{
+	const float PI = 3.14159265f;
+
+	Quaternion id;
+	CHECK(id == Quaternion(0, 0, 0, 1));
+	CHECK(id.toMatrix3().isIdentity());
+	CHECK(id.toMatrix4().isIdentity());
+
+	// Rotation of 90 degrees around z: x axis goes to y axis
+	Quaternion rz(Vector3f(0, 0, 2), PI / 2); // the axis is normalized
+	CHECK_NEAR(rz.length(), 1.0f);
+	CHECK(rz.toMatrix3() * Vector3f::xAxis() == Vector3f::yAxis());
+	CHECK(rz.toMatrix4() * Vector4f::xAxis() == Vector4f::yAxis());
+	CHECK_NEAR(rz.toMatrix4().get(3, 3), 1.0f);
+	CHECK_NEAR(rz.toMatrix3().determinant(), 1.0f);
+
+	// Back and forth with rotation matrices
+	CHECK(Quaternion(rz.toMatrix3()) == rz);
+	CHECK(Quaternion(rz.toMatrix4()) == rz);
+	Quaternion rx(Vector3f::xAxis(), PI); // trace < 0 branches
+	CHECK(Quaternion(rx.toMatrix3()) == rx);
+	Quaternion ry(Vector3f::yAxis(), 0.9f * PI);
+	CHECK(Quaternion(ry.toMatrix3()) == ry);
+	Quaternion rzz(Vector3f::zAxis(), 0.9f * PI);
+	CHECK(Quaternion(rzz.toMatrix3()) == rzz);
+
+	// Composition: 2 rotations of 90 degrees = 1 rotation of 180 degrees
+	Quaternion r180(Vector3f::zAxis(), PI);
+	CHECK(rz * rz == r180);
+	Quaternion q(rz);
+	q *= rz;
+	CHECK(q == r180);
+	CHECK((rz * rz).toMatrix3() == rz.toMatrix3() * rz.toMatrix3());
+
+	// Conjugate and inverse
+	CHECK(rz.conjugate() == Quaternion(-rz.getX(), -rz.getY(), -rz.getZ(), rz.getW()));
+	CHECK(rz * rz.inverse() == id);
+	Quaternion big(1, 2, 3, 4);
+	CHECK(big * big.inverse() == id);
+	CHECK_NEAR(big.dot(big), big.lengthSquared());
+	CHECK_NEAR(big.normalize().length(), 1.0f);
+
+	// Axis and angle
+	Vector3f axis;
+	CHECK_NEAR(rz.toAxisAngle(axis), PI / 2);
+	CHECK(axis == Vector3f::zAxis());
+	CHECK_NEAR(id.toAxisAngle(axis), 0.0f);
+	CHECK(axis == Vector3f::xAxis()); // no meaningful axis for a null rotation
+
+	// Slerp
+	Quaternion r120(Vector3f::zAxis(), 2 * PI / 3);
+	Quaternion r60(Vector3f::zAxis(), PI / 3);
+	CHECK(Quaternion::slerp(id, r120, 0) == id);
+	CHECK(Quaternion::slerp(id, r120, 1) == r120);
+	CHECK(Quaternion::slerp(id, r120, 0.5f) == r60);
+	CHECK(Quaternion::slerp(rz, rz, 0.3f) == rz);
+	// q and -q are the same rotation: slerp takes the shorter path
+	Quaternion negRz(-rz.getX(), -rz.getY(), -rz.getZ(), -rz.getW());
+	CHECK(Quaternion::slerp(id, negRz, 1) == rz);
+
+	// Accessors
+	q.set(0, 1);
+	q.set(3, 2);
+	CHECK_NEAR(q.getX(), 1.0f);
+	CHECK_NEAR(q.get(3), 2.0f);
+	CHECK_THROWS(q.get(4), IndexOutOfBoundException);
+	CHECK_THROWS(q.set(-1, 0), IndexOutOfBoundException);
+}
+
 int main()
 {
 	testMathTools();
@@ -422,6 +606,9 @@ int main()
 	testVector4fMethods();
 	testMatrix3fMethods();
 	testMatrix4fMethods();
+	testVector2f();
+	testMatrix2f();
+	testQuaternion();
 
 	if (nb_failures == 0)
 	{

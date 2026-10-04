@@ -5,10 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(vectormatrix
+	VectorMatrixLib/Vector2f.cpp
 	VectorMatrixLib/Vector3f.cpp
 	VectorMatrixLib/Vector4f.cpp
+	VectorMatrixLib/Matrix2f.cpp
 	VectorMatrixLib/Matrix3f.cpp
 	VectorMatrixLib/Matrix4f.cpp
+	VectorMatrixLib/Quaternion.cpp
 )
 target_include_directories(vectormatrix PUBLIC VectorMatrixLib)
 
